@@ -25,7 +25,9 @@ object UnivEq {
   final val UnivEqAnyRef: UnivEq[AnyRef] =
     new UnivEq(_ == _)
 
-  @inline def force[A <: AnyRef]: UnivEq[A] =
+  @inline def force[A]: UnivEq[A] =
+    // TODO Why does this work?!
+    // UnivEq is a value-class which is specialised. Casting shouldn't work for T <: AnyVal but it does...
     UnivEqAnyRef.asInstanceOf[UnivEq[A]]
 
   // Primitives

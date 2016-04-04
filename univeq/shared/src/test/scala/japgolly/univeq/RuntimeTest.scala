@@ -24,6 +24,8 @@ object RuntimeTest extends TestSuite {
   case class Wrap[A](a: A)
   implicit def univEqWrap[A: UnivEq]: UnivEq[Wrap[A]] = UnivEq.derive
 
+  case class I(i: Int)
+
   override def tests = TestSuite {
     'scala {
       'unit    - assertId(())
@@ -46,6 +48,17 @@ object RuntimeTest extends TestSuite {
       compileError("3 ==* false")
       assert(3 ==* 3)
       assert(3 !=* 4)
+    }
+
+    'force {
+      def test[A](a: A, b: A): Unit = {
+        implicit def f = UnivEq.force[A]
+        assert(a ==* a)
+        assert(a !=* b)
+      }
+      'anyref - test(I(1), I(2))
+      'int    - test(1, 2)
+      'bool   - test(true, false)
     }
   }
 }
