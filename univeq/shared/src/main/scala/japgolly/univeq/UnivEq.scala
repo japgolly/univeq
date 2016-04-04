@@ -6,7 +6,7 @@ import scala.collection.immutable.ListSet
 /**
  * Universal equality.
  */
-final class UnivEq[-A] private[univeq](val equal: (A, A) => Boolean) extends AnyVal
+final class UnivEq[A] private[univeq](val equal: (A, A) => Boolean) extends AnyVal
 
 object UnivEq {
 
@@ -26,7 +26,7 @@ object UnivEq {
     new UnivEq(_ == _)
 
   @inline def force[A <: AnyRef]: UnivEq[A] =
-    UnivEqAnyRef
+    UnivEqAnyRef.asInstanceOf[UnivEq[A]]
 
   // Primitives
   implicit val UnivEqUnit   : UnivEq[Unit   ] = always
@@ -66,9 +66,17 @@ object UnivEq {
   @inline implicit def univEqJShort                : UnivEq[jl.Short  ] = force
   @inline implicit def univEqJEnum[A <: jl.Enum[A]]: UnivEq[jl.Enum[A]] = force
 
+  // Derivation
+  @inline def derive              [T <: AnyRef]: UnivEq[T] = macro macros.UnivEqMacros.deriveAutoQuiet[T]
+  @inline def deriveVerbose       [T <: AnyRef]: UnivEq[T] = macro macros.UnivEqMacros.deriveAutoDebug[T]
+//  @inline def deriveShallow       [A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveQuiet[A]
+//  @inline def deriveShallowVerbose[A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveDebug[A]
+
+  object AutoDerive {
+    @inline implicit def autoDeriveUnivEq[A <: AnyRef]: UnivEq[A] =
+      macro macros.UnivEqMacros.deriveQuiet[A]
+  }
 }
-
-
 
 
 //  @inline implicit def univEqDisj   [A: UnivEq, B: UnivEq]: UnivEq[A \/ B]          = univEqForce
@@ -78,22 +86,6 @@ object UnivEq {
 
 //  @inline implicit def univEqMultimap[K, L[_], V](implicit ev: UnivEq[Map[K, L[V]]]): UnivEq[Multimap[K, L, V]] = univEqForce
 
-//
-//  def  derive[A]: UnivEq[A] = macro MacroImpl.quietDerive[A]
-//  def _derive[A]: UnivEq[A] = macro MacroImpl.debugDerive[A]
-//  def  deriveAuto[A]: UnivEq[A] = macro MacroImpl.quietDeriveAuto[A]
-//  def _deriveAuto[A]: UnivEq[A] = macro MacroImpl.debugDeriveAuto[A]
-//
-//  object Implicits extends UnivEqImplicits
-//
-//  final class Ops[A](private val a: A) extends AnyVal {
-//    @inline def ==*[B >: A : UnivEq](b: B): Boolean =
-//      a == b
-//
-//    @inline def !=*[B >: A : UnivEq](b: B): Boolean =
-//      a != b
-//  }
-//
 //  // -------------------------------------------------------------------------------------------------------------------
 //
 ////  def withOrder[A](o: Order[A]): Order[A] with UnivEq[A] =
@@ -132,100 +124,3 @@ object UnivEq {
 //
 //  @inline def toSet[A: UnivEq](as: TraversableOnce[A]): Set[A] = as.toSet
 //
-//  // ===================================================================================================================
-//
-//  import scala.reflect.macros.blackbox.Context
-//
-//  object AutoDerive {
-//    implicit def autoDeriveUnivEq[A]: UnivEq[A] = macro UnivEq.MacroImpl.quietDerive[A]
-//  }
-//
-//  class MacroImpl(val c: Context) extends MacroUtils {
-//    import c.universe._
-//
-//    val univEq = c.typeOf[UnivEq[_]]
-//
-//    def quietDeriveAuto[T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = implDerive(false, true)
-//    def debugDeriveAuto[T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = implDerive(true , true)
-//    def quietDerive[T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = implDerive(false, false)
-//    def debugDerive[T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = implDerive(true , false)
-//    def implDerive[T: c.WeakTypeTag](debug: Boolean, auto: Boolean): c.Expr[UnivEq[T]] = {
-//      if (debug) println()
-//
-//      // Fucking macros ignore implicit params in the enclosing method!
-//      val eo = c.internal.enclosingOwner
-//      val whitelist: Set[Type] =
-//        if (eo.isMethod) {
-//          val m = eo.asMethod
-//          m.paramLists.flatten.collect { case a if a.isImplicit =>
-//            a.typeSignature match {
-//              case TypeRef(ThisType(_), a, List(inner)) if a.fullName == "japgolly.univeq.UnivEq" => inner
-//              case _ => null
-//            }
-//          }.filter(_ ne null).toSet
-//        } else Set.empty
-//      if (debug && whitelist.nonEmpty) println("Whitelist: " + whitelist)
-//
-//      val T = weakTypeOf[T]
-//      ensureUnivEq(T, debug, auto,
-//        s => whitelist.exists(w => (s <:< w) || (s.toString == w.toString)))
-//
-//      val impl = q"_root_.japgolly.univeq.UnivEq.force[$T]"
-//
-//      if (debug) println("\n")// + impl + "\n")
-//      c.Expr[UnivEq[T]](impl)
-//    }
-//
-//    def ensureUnivEq(T: Type, debug: Boolean, auto: Boolean, allow: Type => Boolean): Unit = {
-//      if (debug) println(s"→ $T")
-//      def found(t: Any, p: Any): Unit =
-//        if (debug) {
-//          printf("%-90s = %s\n", t.toString, p.toString())
-//        }
-//
-//      val t = T.typeSymbol
-//      if (t.isType && allow(t.asType.toType))
-//        found(t, "implicit arg")
-//      else if (t.isClass && t.asClass.isCaseClass) {
-//        // Case class
-//        ensureConcrete(T)
-//        val params = primaryConstructorParams(T)
-//        for (p <- params) {
-//          val (pn, pt) = nameAndType(T, p)
-//          if (debug) println(s"  .$pn: $pt")
-//          val u = appliedType(univEq, pt)
-//          if (allow(pt))
-//            found(pt, "implicit arg")
-//          else
-//            tryInferImplicit(u) match {
-//              case Some(i) => found(pt, i)
-//              case None    => fail(s"Implicit not found: $u") //init += q"implicitly[$u]"
-//            }
-//        }
-//      } else
-//        // ADT
-//        crawlADT(T, p => {
-//          val pt = determineAdtType(T, p)
-//          if (allow(pt)) {
-//            found(pt, "implicit arg")
-//            Some(())
-//          } else if (p.isModuleClass) {
-//            found(pt, "case object")
-//            Some(())
-//          } else
-//            tryInferImplicit(appliedType(univEq, pt)).map(found(pt, _)).orElse {
-//              if (auto)
-//                Some(ensureUnivEq(pt, debug, auto, allow))
-//              else None
-//            }
-//        }, p => {
-//          val pt = p.asType.toType
-//          val u = appliedType(univEq, pt)
-//          fail(s"Implicit not found: $u")
-//          // init += q"implicitly[$u]"
-//          // Vector.empty
-//        })
-//    }
-//
-//  }
-//}
