@@ -3,7 +3,7 @@ package japgolly.univeq.external
 
 import utest.asserts.{compileError => NO}
 import japgolly.univeq.UnivEq
-import UnivEq.{derive, deriveVerbose}
+import UnivEq.{derive, deriveDebug}
 
 object DerivationTest {
 

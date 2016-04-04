@@ -67,10 +67,10 @@ object UnivEq {
   @inline implicit def univEqJEnum[A <: jl.Enum[A]]: UnivEq[jl.Enum[A]] = force
 
   // Derivation
-  @inline def derive              [T <: AnyRef]: UnivEq[T] = macro macros.UnivEqMacros.deriveAutoQuiet[T]
-  @inline def deriveVerbose       [T <: AnyRef]: UnivEq[T] = macro macros.UnivEqMacros.deriveAutoDebug[T]
-//  @inline def deriveShallow       [A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveQuiet[A]
-//  @inline def deriveShallowVerbose[A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveDebug[A]
+  @inline def derive            [A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveAutoQuiet[A]
+  @inline def deriveDebug       [A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveAutoDebug[A]
+//@inline def deriveShallow     [A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveQuiet[A]
+//@inline def deriveShallowDebug[A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveDebug[A]
 
   object AutoDerive {
     @inline implicit def autoDeriveUnivEq[A <: AnyRef]: UnivEq[A] =
