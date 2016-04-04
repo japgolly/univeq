@@ -100,18 +100,24 @@ object UnivEq extends Build {
   lazy val scalazJVM = scalaz.jvm
   lazy val scalazJS  = scalaz.js
   lazy val scalaz = crossProject
+    .in(file("univeq-scalaz"))
     .configure(commonSettings)
     .bothConfigure(publicationSettings)
     .dependsOn(univEq)
     .configure(utestSettings)
-    .settings(libraryDependencies += "org.scalaz" %%% "scalaz-core" % Ver.Scalaz)
+    .settings(
+      moduleName          := "univeq-scalaz",
+      libraryDependencies += "org.scalaz" %%% "scalaz-core" % Ver.Scalaz)
 
   lazy val catsJVM = cats.jvm
   lazy val catsJS  = cats.js
   lazy val cats = crossProject
+    .in(file("univeq-cats"))
     .configure(commonSettings)
     .bothConfigure(publicationSettings)
     .dependsOn(univEq)
     .configure(utestSettings)
-    .settings(libraryDependencies += "org.typelevel" %%% "cats" % Ver.Cats)
+    .settings(
+      moduleName          := "univeq-cats",
+      libraryDependencies += "org.typelevel" %%% "cats" % Ver.Cats)
 }
