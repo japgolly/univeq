@@ -1,7 +1,5 @@
 package japgolly.univeq.macros
 
-import scala.annotation.tailrec
-
 object MacroUtils {
   sealed trait FindSubClasses
   case object DirectOnly extends FindSubClasses
@@ -13,12 +11,6 @@ abstract class MacroUtils {
   val c: scala.reflect.macros.blackbox.Context
   import c.universe._
   import MacroUtils.FindSubClasses
-
-  sealed trait TypeOrTree
-  case class GotType(t: Type) extends TypeOrTree
-  case class GotTree(t: Tree) extends TypeOrTree
-  implicit def autoTypeOrTree1(t: Type): TypeOrTree = GotType(t)
-  implicit def autoTypeOrTree2(t: Tree): TypeOrTree = GotTree(t)
 
   @inline final def DirectOnly = MacroUtils.DirectOnly
   @inline final def LeavesOnly = MacroUtils.LeavesOnly
@@ -55,18 +47,6 @@ abstract class MacroUtils {
       .paramLists
       .headOption
       .getOrElse(fail("Primary constructor missing paramList."))
-
-  final def primaryConstructorParams_require1(t: Type): Symbol =
-    primaryConstructorParams(t) match {
-      case p :: Nil => p
-      case x        => fail(s"One field expected. ${t.typeSymbol.name} has: $x")
-    }
-
-  final def primaryConstructorParams_require2(t: Type): (Symbol, Symbol) =
-    primaryConstructorParams(t) match {
-      case a :: b :: Nil => (a, b)
-      case x             => fail(s"Two fields expected. ${t.typeSymbol.name} has: $x")
-    }
 
   type NameAndType = (TermName, Type)
   final def nameAndType(T: Type, s: Symbol): NameAndType = {
@@ -196,163 +176,6 @@ abstract class MacroUtils {
     c.typecheck(q"""(??? : $baseTrait) match {case $name@$companion(..$matchArgs) => $name }""").tpe
   }
 
-  final def flattenBlocks(trees: List[Tree]): Vector[Tree] = {
-    @tailrec def go(acc: Vector[Tree], ts: List[Tree]): Vector[Tree] =
-      ts match {
-        case                 Nil => acc
-        case Block(a, b) :: tail => go(acc, a ::: b :: tail)
-        case h           :: tail => go(acc :+ h, tail)
-      }
-    go(Vector.empty, trees)
-  }
-//  final def flattenBlocks(trees: GenTraversable[Tree]): Vector[Tree] = {
-//    import _
-//    @tailrec final def go(acc: Vector[Tree], ts: GenTraversable[Tree]): Vector[Tree] =
-//      ts.headOption match {
-//        case None              => acc
-//        case Some(Block(a, b)) => go(acc, (a :+ b) ++ ts.tail)
-//        case Some(h)           => go(acc :+ h, ts.tail)
-//      }
-//    go(Vector.empty, trees)
-//  }
-
-  final def modStringHead(s: String, f: Char => Char): String =
-    if (s.isEmpty)
-      ""
-    else {
-      val h = f(s.head).toString
-      if (s.length == 1)
-        h
-      else
-        h + s.tail
-    }
-
-  final def lowerCaseHead(s: String): String =
-    modStringHead(s, _.toLower)
-
-  final def readMacroArg_boolean(e: c.Expr[Boolean]): Boolean =
-    e match {
-      case Expr(Literal(Constant(b: Boolean))) => b
-      case _ => fail(s"Expected a literal boolean, got: ${showRaw(e)}")
-    }
-
-  final def readMacroArg_string(e: c.Expr[String]): String =
-    e match {
-      case Expr(Literal(Constant(s: String))) => s
-      case _ => fail(s"Expected a literal string, got: ${showRaw(e)}")
-    }
-
-  final def readMacroArg_symbol(e: c.Expr[scala.Symbol]): String =
-    e match {
-      case Expr(Apply(_, List(Literal(Constant(n: String))))) => n
-      case _ => fail(s"Expected a symbol, got: ${showRaw(e)}")
-    }
-
-  final def readMacroArg_stringString(e: c.Expr[(String, String)]): (String, Literal) =
-    e match {
-      // "k" -> "v"
-      case Expr(Apply(TypeApply(Select(Apply(_, List(Literal(Constant(k: String)))), mg), _), List(v@Literal(Constant(_: String))))) =>
-        (k, v)
-      case x =>
-        fail(s"""Expected "k" -> "v", got: $x\n${showRaw(x)}""")
-    }
-
-  final def readMacroArg_symbolString(e: c.Expr[(scala.Symbol, String)]): (String, Literal) =
-    e match {
-      // 'k -> "v"
-      case Expr(Apply(TypeApply(Select(Apply(_, List(Apply(_, List(Literal(Constant(k: String)))))), mg), _), List(v@Literal(Constant(_: String))))) =>
-        (k, v)
-      case x =>
-        fail(s"""Expected 'k -> "v", got: $x\n${showRaw(x)}""")
-    }
-
-  final def readMacroArg_tToLitFn[T, V: scala.reflect.Manifest](e: c.Expr[T => V]): List[(Either[Select, Type], Literal)] =
-    readMacroArg_tToTree(e).map(x => (x._1, x._2 match {
-      case lit @ Literal(Constant(_: V)) => lit
-      case x => fail(s"Expecting a literal value, got: ${showRaw(x)}")
-    }))
-
-  final def readMacroArg_tToTree[T, V](e: c.Expr[T => V]): List[(Either[Select, Type], Tree)] =
-    e match {
-      case Expr(Function(_, Match(_, caseDefs))) =>
-        caseDefs map {
-
-          // case _: Class => "k"
-          case CaseDef(Typed(_, t: TypeTree), _, tree) =>
-            (Right(t.tpe), tree)
-
-          // case Object => "k"
-          case CaseDef(s@ Select(_, _), _, tree) =>
-            (Left(s), tree)
-
-          case x =>
-            fail(s"Expecting a case like: {case Type => ?}\n    Got: ${showRaw(x)}")
-        }
-      case _ =>
-        fail(s"Expecting a function like: {case Type => ?}\n    Got: ${showRaw(e)}")
-    }
-
-  /**
-   * Create code for a function that will call .apply() on a given type's type companion object.
-   */
-  final def tcApplyFn(t: Type): Select = {
-    val sym = t.typeSymbol
-    val tc  = sym.companion
-    if (tc == NoSymbol)
-      fail(s"Companion object not found for $sym")
-    val pre = t match {
-      case TypeRef(p, _, _) => p
-      case x                => fail(s"Don't know how to extract `pre` from ${showRaw(x)}")
-    }
-
-    pre match {
-      // Path dependent, eg. `t.Literal`
-      case SingleType(NoPrefix, path) =>
-        Select(Ident(path), tc.asTerm.name)
-
-      // Assume type companion .apply exists
-      case _ =>
-        Select(Ident(tc), TermName("apply"))
-    }
-  }
-
-  final def selectFQN(s: String, lastIsType: Boolean): RefTree = {
-    val terms = s.split('.').map(TermName(_): Name)
-    val l = terms.length - 1
-    // Bad hack
-    if (lastIsType)
-      terms(l) = terms(l).toTypeName
-    val h = Ident(terms.head): RefTree
-    if (l == 0)
-      h
-    else
-      terms.tail.foldLeft(h)(Select(_, _))
-  }
-
-  final def toSelectFQN(t: TypeSymbol): RefTree = {
-    // Do this properly later
-    selectFQN(t.fullName, !t.isModuleClass)
-  }
-
-  /**
-   * Sometimes using a type directly in a clause like "case _: $t => ...", causes spurious exhaustiveness warnings.
-   * I definitively know why, problably something about compiler-phase order.
-   * This fixes it consistently so far.
-   */
-  final def fixAdtTypeForCaseDef(t: Type): Tree = {
-    if (t.typeSymbol.isModuleClass)
-      TypeTree(t)
-    else {
-      // Take the FQN and re-evaluate. Why? I don't know.
-      // But without this there'll be spurious exhaustiveness warnings
-      val fqn = toSelectFQN(t.typeSymbol.asType)
-      if (t.typeArgs.isEmpty)
-        fqn
-      else
-        AppliedTypeTree(fqn, t.typeArgs.map(TypeTree(_)))
-    }
-  }
-
   final def tryInferImplicit(t: Type): Option[Tree] =
     c.inferImplicitValue(t, silent = true) match {
       case EmptyTree => None
@@ -361,52 +184,4 @@ abstract class MacroUtils {
 
   final def needInferImplicit(t: Type): Tree =
     tryInferImplicit(t) getOrElse fail(s"Implicit not found: $t")
-
-  implicit val liftInit = Liftable[Init](i => q"..${i.stmts}")
-  class Init {
-    var seen = Map.empty[String, TermName]
-    var stmts: Vector[Tree] = Vector.empty
-
-    def +=(t: Tree): Unit =
-      stmts :+= t
-
-    def valImp(tot: TypeOrTree): TermName = tot match {
-      case GotType(t) => valDef(needInferImplicit(t))
-      case GotTree(t) => valDef(q"implicitly[$t]")
-    }
-
-    def valDef(value: Tree): TermName = {
-      val k = value.toString()
-      seen.get(k) match {
-        case None =>
-          val v = TermName(c.freshName())
-          this += q"val $v = $value"
-          seen = seen.updated(k, v)
-          v
-        case Some(v) => v
-      }
-    }
-
-    def wrap(body: Tree): Tree =
-      q"..$this; $body"
-  }
-
-  def Init(stmts: Tree*): Init = {
-    val i = new Init
-    stmts foreach (i += _)
-    i
-  }
-
-  def LitNil = Ident(c.mirror staticModule "scala.collection.immutable.Nil")
-
-  def identityExpr[T: c.WeakTypeTag]: c.Expr[T => T] = {
-    val T = weakTypeOf[T]
-    c.Expr[T => T](q"(t: $T) => t")
-  }
-
-  def deterministicOrderT(ts: TraversableOnce[Type]): Vector[Type] =
-    ts.toVector.sortBy(_.typeSymbol.fullName)
-
-  def deterministicOrderC(ts: TraversableOnce[ClassSymbol]): Vector[ClassSymbol] =
-    ts.toVector.sortBy(_.fullName)
 }

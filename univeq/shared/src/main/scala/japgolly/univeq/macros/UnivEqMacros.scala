@@ -16,7 +16,6 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
   def derive[T <: AnyRef : c.WeakTypeTag](debug: Boolean, auto: Boolean): c.Expr[UnivEq[T]] = {
     val T = weakTypeOf[T]
 
-    def sep = "=" * 120
     if (debug) {
       println(sep)
       println(s"Deriving UnivEq[$T]")
