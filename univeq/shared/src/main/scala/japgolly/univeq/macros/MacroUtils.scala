@@ -16,7 +16,7 @@ abstract class MacroUtils {
   @inline final def LeavesOnly = MacroUtils.LeavesOnly
   @inline final def Everything = MacroUtils.Everything
 
-  final def sep = ("_" * 120) + "\n"
+  final def sep = ("_" * 120)
 
   final def fail(msg: String): Nothing =
     c.abort(c.enclosingPosition, msg)
@@ -176,8 +176,8 @@ abstract class MacroUtils {
     c.typecheck(q"""(??? : $baseTrait) match {case $name@$companion(..$matchArgs) => $name }""").tpe
   }
 
-  final def tryInferImplicit(t: Type): Option[Tree] =
-    c.inferImplicitValue(t, silent = true) match {
+  final def tryInferImplicit(t: Type, withMacrosDisabled: Boolean = false): Option[Tree] =
+    c.inferImplicitValue(t, silent = true, withMacrosDisabled = withMacrosDisabled) match {
       case EmptyTree => None
       case i         => Some(i)
     }

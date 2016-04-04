@@ -21,24 +21,32 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
       println(s"Deriving UnivEq[$T]")
     }
 
+    def prove(): Unit = {
+      // Macros ignore implicit params in the enclosing method :(
+      // Manually scan each declared implicit and maintain a whitelist.
+      val whitelist = findUnivEqAmongstImplicitArgs
+
+      if (debug && whitelist.nonEmpty)
+        println("Whitelist: " + whitelist)
+
+      ensureUnivEq(T, debug, auto,
+        s => whitelist.exists(w => (s <:< w) || (s.toString == w.toString)))
+
+      if (debug) println("Ok.")
+    }
+
     try {
 
-      tryInferImplicit(appliedType(UnivEq, T)) match {
-        case Some(_) =>
+      /*
+      tryInferImplicit(appliedType(UnivEq, T), withMacrosDisabled = true) match {
+        case Some(s) =>
           if (debug)
-            println("Implicit instance already in scope.")
-
-        case None =>
-          // Macros ignore implicit params in the enclosing method :(
-          // Manually scan each declared implicit and maintain a whitelist.
-          val whitelist = findUnivEqAmongstImplicitParams
-
-          if (debug && whitelist.nonEmpty)
-            println("Whitelist: " + whitelist)
-
-          ensureUnivEq(T, debug, auto,
-            s => whitelist.exists(w => (s <:< w) || (s.toString == w.toString)))
+            println("Implicit instance already in scope: " + show(s))
+        case None => prove()
       }
+      */
+
+      prove()
 
       val impl = q"_root_.japgolly.univeq.UnivEq.force[$T]"
 
@@ -55,7 +63,7 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
       }
   }
 
-  def findUnivEqAmongstImplicitParams: Set[Type] = {
+  def findUnivEqAmongstImplicitArgs: Set[Type] = {
     val eo = c.internal.enclosingOwner
     if (eo.isMethod) {
       val m = eo.asMethod
