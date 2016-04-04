@@ -24,15 +24,22 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
 
     try {
 
-      // Macros ignore implicit params in the enclosing method :(
-      // Manually scan each declared implicit and maintain a whitelist.
-      val whitelist = findUnivEqAmongstImplicitParams
+      tryInferImplicit(appliedType(UnivEq, T)) match {
+        case Some(_) =>
+          if (debug)
+            println("Implicit instance already in scope.")
 
-      if (debug && whitelist.nonEmpty)
-        println("Whitelist: " + whitelist)
+        case None =>
+          // Macros ignore implicit params in the enclosing method :(
+          // Manually scan each declared implicit and maintain a whitelist.
+          val whitelist = findUnivEqAmongstImplicitParams
 
-      ensureUnivEq(T, debug, auto,
-        s => whitelist.exists(w => (s <:< w) || (s.toString == w.toString)))
+          if (debug && whitelist.nonEmpty)
+            println("Whitelist: " + whitelist)
+
+          ensureUnivEq(T, debug, auto,
+            s => whitelist.exists(w => (s <:< w) || (s.toString == w.toString)))
+      }
 
       val impl = q"_root_.japgolly.univeq.UnivEq.force[$T]"
 

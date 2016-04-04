@@ -1,6 +1,7 @@
 package japgolly.univeq
 
 import utest._
+import UnivEq.AutoDerive._
 
 object RuntimeTest extends TestSuite {
 
@@ -22,7 +23,6 @@ object RuntimeTest extends TestSuite {
     assert(u == null)
 
   case class Wrap[A](a: A)
-  implicit def univEqWrap[A: UnivEq]: UnivEq[Wrap[A]] = UnivEq.derive
 
   override def tests = TestSuite {
     'scala {
