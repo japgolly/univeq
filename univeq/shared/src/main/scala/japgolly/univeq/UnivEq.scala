@@ -1,4 +1,4 @@
-package univeq
+package japgolly.univeq
 
 import nyaya.util.{NonEmptyList => _, _}
 import scala.collection.immutable.ListSet

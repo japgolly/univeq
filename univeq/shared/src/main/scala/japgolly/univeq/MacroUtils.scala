@@ -1,4 +1,4 @@
-package univeq
+package japgolly.univeq
 
 import scala.annotation.tailrec
 
