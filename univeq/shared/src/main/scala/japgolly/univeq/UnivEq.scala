@@ -22,7 +22,7 @@ object UnivEq {
   def never[A]: UnivEq[A] =
     const(false)
 
-  val UnivEqAnyRef: UnivEq[AnyRef] =
+  final val UnivEqAnyRef: UnivEq[AnyRef] =
     new UnivEq(_ == _)
 
   @inline def force[A <: AnyRef]: UnivEq[A] =
@@ -76,45 +76,13 @@ object UnivEq {
     @inline implicit def autoDeriveUnivEq[A <: AnyRef]: UnivEq[A] =
       macro macros.UnivEqMacros.deriveQuiet[A]
   }
+
+  // ===================================================================================================================
+
+  @inline def emptyMap       [K: UnivEq, V] = Map.empty[K, V]
+  @inline def emptySet       [A: UnivEq]    = Set.empty[A]
+  @inline def emptyMutableSet[A: UnivEq]    = collection.mutable.Set.empty[A]
+  @inline def setBuilder     [A: UnivEq]    = Set.newBuilder[A]
+
+  @inline def toSet[A: UnivEq](as: TraversableOnce[A]): Set[A] = as.toSet
 }
-
-//  @inline implicit def univEqMultimap[K, L[_], V](implicit ev: UnivEq[Map[K, L[V]]]): UnivEq[Multimap[K, L, V]] = univEqForce
-
-//  // -------------------------------------------------------------------------------------------------------------------
-//
-////  def withOrder[A](o: Order[A]): Order[A] with UnivEq[A] =
-////    new Order[A] with UnivEq[A] {
-////      override def order(a: A, b: A) = o.order(a, b)
-////    }
-////
-////  def withArbitraryOrder[A](values: Iterable[A]): Order[A] with UnivEq[A] = {
-////    val fixedOrder = values.zipWithIndex.toMap
-////    new Order[A] with UnivEq[A] {
-////      @inline private[this] def int(s: A) = fixedOrder(s)
-////      override def order(a: A, b: A) = Order[Int].order(int(a), int(b))
-////    }
-////  }
-////
-////  def setMonoid[A: UnivEq]: Monoid[Set[A]] =
-////    new Monoid[Set[A]] {
-////      override def zero = Set.empty
-////      override def append(a: Set[A], b: => Set[A]) = a | b
-////    }
-//
-//  // Copied from Shapeless
-//  trait =:!=[A, B]
-//  def _unexpected : Nothing = sys.error("Unexpected invocation")
-//  implicit def _neq[A, B] : A =:!= B = null.asInstanceOf[A =:!= B] //new =:!=[A, B] {}
-//  implicit def _neqAmbig1[A] : A =:!= A = _unexpected
-//  implicit def _neqAmbig2[A] : A =:!= A = _unexpected
-//
-//  @inline def emptyMap        [K: UnivEq, V]         = Map.empty[K, V]
-//  @inline def emptySet        [A: UnivEq]            = Set.empty[A]
-//  @inline def emptySetMultimap[K: UnivEq, V: UnivEq] = Multimap.empty[K, Set, V]
-//  @inline def emptyMultimap   [K: UnivEq, L[_] : MultiValues, V](implicit ev: L[V] =:!= Set[V]) = Multimap.empty[K, L, V]
-//
-//  @inline def emptyMutableSet[A: UnivEq] = collection.mutable.Set.empty[A]
-//  @inline def setBuilder     [A: UnivEq] = Set.newBuilder[A]
-//
-//  @inline def toSet[A: UnivEq](as: TraversableOnce[A]): Set[A] = as.toSet
-//

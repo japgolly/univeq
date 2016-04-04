@@ -13,6 +13,12 @@ trait UnivEqScalaz {
   @inline implicit def univEqNel    [A: UnivEq]           : UnivEq[NonEmptyList[A]] = force
 
   @inline implicit def univEqOneAnd[F[_], A](implicit fa: UnivEq[F[A]], a: UnivEq[A]): UnivEq[OneAnd[F, A]] = derive
+
+  def monoidSet[A: UnivEq]: Monoid[Set[A]] =
+    new Monoid[Set[A]] {
+      override def zero = Set.empty
+      override def append(a: Set[A], b: => Set[A]) = a | b
+    }
 }
 
 object UnivEqScalaz extends UnivEqExports
