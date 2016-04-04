@@ -41,5 +41,11 @@ object RuntimeTest extends TestSuite {
     }
 
     'derived - assertPass(Wrap(2), Wrap(3))
+
+    'ops {
+      compileError("3 ==* false")
+      assert(3 ==* 3)
+      assert(3 !=* 4)
+    }
   }
 }
