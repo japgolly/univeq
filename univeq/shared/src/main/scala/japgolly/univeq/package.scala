@@ -2,7 +2,7 @@ package japgolly
 
 package object univeq {
 
-  final class Ops[A](private val a: A) extends AnyVal {
+  final class UnivEqOps[A](private val a: A) extends AnyVal {
     @inline def ==*[B >: A : UnivEq](b: B): Boolean =
       a == b
 
@@ -10,4 +10,16 @@ package object univeq {
       a != b
   }
 
+  @inline implicit def UnivEqOps[A](a: A): UnivEqOps[A] =
+    new UnivEqOps(a)
+
+  // ============================================================================
+
+  trait UnivEqExports {
+    @inline implicit def UnivEqOps[A](a: A): UnivEqOps[A] =
+      new UnivEqOps(a)
+
+    type UnivEq[A] = japgolly.univeq.UnivEq[A]
+    val UnivEq = japgolly.univeq.UnivEq
+  }
 }

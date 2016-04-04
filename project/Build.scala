@@ -12,9 +12,11 @@ object UnivEq extends Build {
     Lib.publicationSettings(ghProject)
 
   object Ver {
+    final val Cats          = "0.4.1"
     final val MacroParadise = "2.1.0"
     final val MTest         = "0.4.3"
     final val Scala211      = "2.11.8"
+    final val Scalaz        = "7.2.1"
   }
 
   def scalacFlags = Seq(
@@ -83,7 +85,9 @@ object UnivEq extends Build {
   lazy val root =
     Project("root", file("."))
       .configure(commonSettings.jvm, preventPublication)
-      .aggregate(univEqJVM, univEqJS)
+      .aggregate(
+        univEqJVM, scalazJVM, catsJVM,
+        univEqJS , scalazJS , catsJS)
 
   lazy val univEqJVM = univEq.jvm
   lazy val univEqJS  = univEq.js
@@ -92,4 +96,22 @@ object UnivEq extends Build {
     .configure(commonSettings, utestSettings)
     .bothConfigure(definesMacros, publicationSettings)
     .settings(moduleName := "univeq")
+
+  lazy val scalazJVM = scalaz.jvm
+  lazy val scalazJS  = scalaz.js
+  lazy val scalaz = crossProject
+    .configure(commonSettings)
+    .bothConfigure(publicationSettings)
+    .dependsOn(univEq)
+    .configure(utestSettings)
+    .settings(libraryDependencies += "org.scalaz" %%% "scalaz-core" % Ver.Scalaz)
+
+  lazy val catsJVM = cats.jvm
+  lazy val catsJS  = cats.js
+  lazy val cats = crossProject
+    .configure(commonSettings)
+    .bothConfigure(publicationSettings)
+    .dependsOn(univEq)
+    .configure(utestSettings)
+    .settings(libraryDependencies += "org.typelevel" %%% "cats" % Ver.Cats)
 }
