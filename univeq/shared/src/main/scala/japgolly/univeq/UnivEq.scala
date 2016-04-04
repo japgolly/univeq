@@ -38,7 +38,7 @@ object UnivEq {
   implicit val UnivEqByte   : UnivEq[Byte   ] = new UnivEq(_ == _)
 
   // Scala
-  @inline implicit def univEqString                       : UnivEq[String    ] = force
+          implicit val univEqString                       : UnivEq[String    ] = force
   @inline implicit def univEqClass  [A]                   : UnivEq[Class  [A]] = force
   @inline implicit def univEqOption [A: UnivEq]           : UnivEq[Option [A]] = force
   @inline implicit def univEqSet    [A: UnivEq]           : UnivEq[Set    [A]] = force
