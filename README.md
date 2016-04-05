@@ -3,6 +3,9 @@
 Safer universal equivalence for Scala & Scala.JS.
 *(zero-dependency)*
 
+*Created: Feb 2015.
+<br>Open-Sourced: Apr 2016.*
+
 
 ## Motivation
 
