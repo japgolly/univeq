@@ -16,10 +16,10 @@ package object univeq {
   // ============================================================================
 
   trait UnivEqExports {
-    @inline implicit def UnivEqOps[A](a: A): UnivEqOps[A] =
+    @inline implicit final def UnivEqOps[A](a: A): UnivEqOps[A] =
       new UnivEqOps(a)
 
-    type UnivEq[A] = japgolly.univeq.UnivEq[A]
-    val UnivEq = japgolly.univeq.UnivEq
+    final type UnivEq[A] = japgolly.univeq.UnivEq[A]
+    final val UnivEq = japgolly.univeq.UnivEq
   }
 }
