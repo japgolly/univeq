@@ -42,6 +42,7 @@ object UnivEq {
   // Scala
           implicit val univEqString                       : UnivEq[String    ] = force
   @inline implicit def univEqClass  [A]                   : UnivEq[Class  [A]] = force
+  @inline implicit def univEqClass_                       : UnivEq[Class  [_]] = force
   @inline implicit def univEqOption [A: UnivEq]           : UnivEq[Option [A]] = force
   @inline implicit def univEqSet    [A: UnivEq]           : UnivEq[Set    [A]] = force
   @inline implicit def univEqList   [A: UnivEq]           : UnivEq[List   [A]] = force

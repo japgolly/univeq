@@ -26,6 +26,9 @@ object RuntimeTest extends TestSuite {
 
   case class I(i: Int)
 
+  val clsI = classOf[Int]
+  val clsL = classOf[Long]
+
   override def tests = TestSuite {
     'scala {
       'unit    - assertId(())
@@ -40,6 +43,14 @@ object RuntimeTest extends TestSuite {
       'string  - assertPass("x", "")
 
       'option  - assertPass[Option[Int]](Some(2), None, Some(4))
+
+      'class {
+        compileError("clsI ==* clsL")
+        assert(clsI == clsI)
+        assertId(clsL)
+      }
+
+      'class_ - assertPass[Class[_]](clsI, clsL)
     }
 
     'derived - assertPass(Wrap(2), Wrap(3))
