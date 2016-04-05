@@ -85,9 +85,17 @@ object UnivEq extends Build {
   lazy val root =
     Project("root", file("."))
       .configure(commonSettings.jvm, preventPublication)
-      .aggregate(
-        univEqJVM, scalazJVM, catsJVM,
-        univEqJS , scalazJS , catsJS)
+      .aggregate(rootJVM, rootJS)
+
+  lazy val rootJVM =
+    Project("JVM", file(".rootJVM"))
+      .configure(commonSettings.jvm, preventPublication)
+      .aggregate(univEqJVM, scalazJVM, catsJVM)
+
+  lazy val rootJS =
+    Project("JS", file(".rootJS"))
+      .configure(commonSettings.jvm, preventPublication)
+      .aggregate(univEqJS , scalazJS , catsJS)
 
   lazy val univEqJVM = univEq.jvm
   lazy val univEqJS  = univEq.js
