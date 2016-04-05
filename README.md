@@ -100,6 +100,7 @@ import japgolly.univeq.UnivEqCats._
   ```scala
   implicit def xxxxxxUnivEq[A: UnivEq]: UnivEq[Xxxxxx[A]] = UnivEq.derive
   ```
+
 * Change `UnivEq.derive` to `UnivEq.deriveDebug` to display derivation details.
 * If needed, you can create instances with `UnivEq.force` to tell the compiler to take your word.
 * Use `==*`/`!=*` in place of `==`/`!=`.
