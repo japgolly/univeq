@@ -10,8 +10,8 @@ env:
     - TARGET=JS  PRE=test:fastOptJS
 
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/$PRE
-  - sbt ++$TRAVIS_SCALA_VERSION monocle${TARGET}/test
+  - sbt ++$TRAVIS_SCALA_VERSION root${TARGET}/$PRE
+  - sbt ++$TRAVIS_SCALA_VERSION root${TARGET}/test
 
 # Taken from https://github.com/typelevel/cats/blob/master/.travis.yml
 cache:
