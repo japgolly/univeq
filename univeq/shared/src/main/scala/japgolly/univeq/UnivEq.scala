@@ -6,38 +6,32 @@ import scala.collection.immutable.ListSet
 /**
  * Universal equality.
  */
-final class UnivEq[A] private[univeq](val equal: (A, A) => Boolean) extends AnyVal
+trait UnivEq[@specialized A] {
+  @inline final def univEq(a: A, b: A): Boolean =
+    a == b
+}
 
 object UnivEq {
 
   @inline def apply[A](implicit proof: UnivEq[A]): UnivEq[A] =
     proof
 
-  def const[A](equality: Boolean): UnivEq[A] =
-    new UnivEq((_, _) => equality)
-
-  def always[A]: UnivEq[A] =
-    const(true)
-
-  def never[A]: UnivEq[A] =
-    const(false)
-
   final val UnivEqAnyRef: UnivEq[AnyRef] =
-    new UnivEq(_ == _)
+    new UnivEq[AnyRef] {}
 
   @inline def force[A]: UnivEq[A] =
     // TODO Why does this work?!
-    // UnivEq is a value-class which is specialised. Casting shouldn't work for T <: AnyVal but it does...
+    // UnivEq is specialised. Casting shouldn't work for T <: AnyVal but it does...
     UnivEqAnyRef.asInstanceOf[UnivEq[A]]
 
   // Primitives
-  implicit val UnivEqUnit   : UnivEq[Unit   ] = always
-  implicit val UnivEqChar   : UnivEq[Char   ] = new UnivEq(_ == _)
-  implicit val UnivEqLong   : UnivEq[Long   ] = new UnivEq(_ == _)
-  implicit val UnivEqInt    : UnivEq[Int    ] = new UnivEq(_ == _)
-  implicit val UnivEqShort  : UnivEq[Short  ] = new UnivEq(_ == _)
-  implicit val UnivEqBoolean: UnivEq[Boolean] = new UnivEq(_ == _)
-  implicit val UnivEqByte   : UnivEq[Byte   ] = new UnivEq(_ == _)
+  implicit val UnivEqUnit   : UnivEq[Unit   ] = new UnivEq[Unit   ] {}
+  implicit val UnivEqChar   : UnivEq[Char   ] = new UnivEq[Char   ] {}
+  implicit val UnivEqLong   : UnivEq[Long   ] = new UnivEq[Long   ] {}
+  implicit val UnivEqInt    : UnivEq[Int    ] = new UnivEq[Int    ] {}
+  implicit val UnivEqShort  : UnivEq[Short  ] = new UnivEq[Short  ] {}
+  implicit val UnivEqBoolean: UnivEq[Boolean] = new UnivEq[Boolean] {}
+  implicit val UnivEqByte   : UnivEq[Byte   ] = new UnivEq[Byte   ] {}
 
   // Scala
           implicit val univEqString                       : UnivEq[String    ] = force

@@ -8,13 +8,13 @@ object RuntimeTest extends TestSuite {
     ()
 
   def assertId[A](a: A)(implicit u: UnivEq[A]): Unit =
-    assert(u.equal(a, a))
+    assert(u.univEq(a, a))
 
   def assertPass[A](as: A*)(implicit u: UnivEq[A]): Unit = {
     as foreach (assertId(_))
     if (as.size > 1) {
       val h = as.head
-      as.tail.foreach(t => assert(!u.equal(h, t)))
+      as.tail.foreach(t => assert(!u.univEq(h, t)))
     }
   }
 
