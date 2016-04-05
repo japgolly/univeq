@@ -33,8 +33,7 @@ object Lib {
   implicit def CrossProjectExtB(b: CrossProject.Builder) =
     new CrossProjectExt(b)
 
-  def publicationSettings(ghProject: String): PE =
-    sourceMapsToGithub(ghProject).andThen(
+  def publicationSettings(ghProject: String) = ConfigureBoth(
     _.settings(
       publishTo := {
         val nexus = "https://oss.sonatype.org/"
@@ -55,6 +54,8 @@ object Lib {
             <name>David Barri</name>
           </developer>
         </developers>))
+    .jsConfigure(
+      sourceMapsToGithub(ghProject))
 
   def sourceMapsToGithub(ghProject: String): PE =
     p => p.settings(

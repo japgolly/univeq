@@ -12,11 +12,10 @@ object UnivEq extends Build {
     Lib.publicationSettings(ghProject)
 
   object Ver {
-    final val Cats          = "0.4.1"
-    final val MacroParadise = "2.1.0"
-    final val MTest         = "0.4.3"
-    final val Scala211      = "2.11.8"
-    final val Scalaz        = "7.2.1"
+    final val Cats     = "0.4.1"
+    final val MTest    = "0.4.3"
+    final val Scala211 = "2.11.8"
+    final val Scalaz   = "7.2.1"
   }
 
   def scalacFlags = Seq(
@@ -34,7 +33,7 @@ object UnivEq extends Build {
   val commonSettings = ConfigureBoth(
     _.settings(
       organization             := "com.github.japgolly.univeq",
-      version                  := "1.0.0-SNAPSHOT",
+      version                  := "1.0.0",
       homepage                 := Some(url("https://github.com/japgolly/" + ghProject)),
       licenses                 += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
       scalaVersion             := Ver.Scala211,
@@ -69,9 +68,6 @@ object UnivEq extends Build {
         // "org.scala-lang" % "scala-library" % Ver.Scala211,
         "org.scala-lang" % "scala-compiler" % Ver.Scala211 % "provided"))
 
-  def macroParadisePlugin =
-    compilerPlugin("org.scalamacros" % "paradise" % Ver.MacroParadise cross CrossVersion.full)
-
   def utestSettings = ConfigureBoth(
     _.settings(
       libraryDependencies += "com.lihaoyi" %%% "utest" % Ver.MTest % "test",
@@ -101,16 +97,15 @@ object UnivEq extends Build {
   lazy val univEqJS  = univEq.js
   lazy val univEq = crossProject
     .in(file("univeq"))
-    .configure(commonSettings, utestSettings)
-    .bothConfigure(definesMacros, publicationSettings)
+    .configure(commonSettings, publicationSettings, utestSettings)
+    .bothConfigure(definesMacros)
     .settings(moduleName := "univeq")
 
   lazy val scalazJVM = scalaz.jvm
   lazy val scalazJS  = scalaz.js
   lazy val scalaz = crossProject
     .in(file("univeq-scalaz"))
-    .configure(commonSettings)
-    .bothConfigure(publicationSettings)
+    .configure(commonSettings, publicationSettings)
     .dependsOn(univEq)
     .configure(utestSettings)
     .settings(
@@ -121,8 +116,7 @@ object UnivEq extends Build {
   lazy val catsJS  = cats.js
   lazy val cats = crossProject
     .in(file("univeq-cats"))
-    .configure(commonSettings)
-    .bothConfigure(publicationSettings)
+    .configure(commonSettings, publicationSettings)
     .dependsOn(univEq)
     .configure(utestSettings)
     .settings(
