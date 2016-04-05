@@ -23,6 +23,17 @@ You're likely to quickly detect this kind of errors when you're writing them for
 It's a breeding ground for bugs.
 
 
+## But Scalactic/Scalaz/Cats/X already has an `Equal` class
+
+This isn't a replacement for the typical `Equal` typeclass you find in other libraries.
+Those define methods of equality, where is this provides a proof that the underlying types' `.equals(Any): Boolean` implementation correctly defines the equality.
+For example, in a project of mine, I use `UnivEq` for about 95% of data and `scalaz.Equal` for the remaining 5%.
+
+Why distinguish? Knowing that universal quality holds is a useful property in its own right.
+It means a more efficient equals implementation because typeclass instances *aren't used* for comparison, which means they're dead code and can be optimised away along with their construction if `def` or `lazy val`s.
+Secondly 99.99% of classes with sensible `.equals` also have sensible `.hashCode` implementations which means it's a good constraint to apply to methods that will depend on it (eg. if you call `.toSet`).
+
+
 ## Provided Here
 This library contains:
 
