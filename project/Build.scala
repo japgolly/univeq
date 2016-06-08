@@ -33,7 +33,7 @@ object UnivEq extends Build {
   val commonSettings = ConfigureBoth(
     _.settings(
       organization             := "com.github.japgolly.univeq",
-      version                  := "1.0.1",
+      version                  := "1.0.2-SNAPSHOT",
       homepage                 := Some(url("https://github.com/japgolly/" + ghProject)),
       licenses                 += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
       scalaVersion             := Ver.Scala211,
