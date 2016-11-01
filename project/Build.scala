@@ -4,7 +4,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin
 import ScalaJSPlugin.autoImport._
 import Lib._
 
-object UnivEq extends Build {
+object UnivEqBuild {
 
   private val ghProject = "univeq"
 
@@ -12,10 +12,10 @@ object UnivEq extends Build {
     Lib.publicationSettings(ghProject)
 
   object Ver {
-    final val Cats     = "0.6.0"
-    final val MTest    = "0.4.3"
+    final val Cats     = "0.8.0"
+    final val MTest    = "0.4.4"
     final val Scala211 = "2.11.8"
-    final val Scalaz   = "7.2.1"
+    final val Scalaz   = "7.2.7"
   }
 
   def scalacFlags = Seq(
@@ -33,9 +33,9 @@ object UnivEq extends Build {
   val commonSettings = ConfigureBoth(
     _.settings(
       organization             := "com.github.japgolly.univeq",
-      version                  := "1.0.2-SNAPSHOT",
       homepage                 := Some(url("https://github.com/japgolly/" + ghProject)),
       licenses                 += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
+      startYear                := Some(2015),
       scalaVersion             := Ver.Scala211,
       scalacOptions           ++= scalacFlags,
       scalacOptions in Test   --= Seq("-Ywarn-dead-code"),
@@ -57,8 +57,6 @@ object UnivEq extends Build {
         "cc"  -> ";clean;compile",
         "ctc" -> ";clean;test:compile",
         "ct"  -> ";clean;test")))
-    .jsConfigure(
-      _.settings(scalaJSUseRhino := false))
 
   def definesMacros: Project => Project =
     _.settings(
@@ -75,8 +73,6 @@ object UnivEq extends Build {
     .jsConfigure(
       // Not mandatory; just faster.
       _.settings(jsEnv in Test := PhantomJSEnv().value))
-
-  override def rootProject = Some(root)
 
   lazy val root =
     Project("root", file("."))
@@ -97,7 +93,7 @@ object UnivEq extends Build {
   lazy val univEqJS  = univEq.js
   lazy val univEq = crossProject
     .in(file("univeq"))
-    .configure(commonSettings, publicationSettings, utestSettings)
+    .configureCross(commonSettings, publicationSettings, utestSettings)
     .bothConfigure(definesMacros)
     .settings(moduleName := "univeq")
 
@@ -105,9 +101,9 @@ object UnivEq extends Build {
   lazy val scalazJS  = scalaz.js
   lazy val scalaz = crossProject
     .in(file("univeq-scalaz"))
-    .configure(commonSettings, publicationSettings)
+    .configureCross(commonSettings, publicationSettings)
     .dependsOn(univEq)
-    .configure(utestSettings)
+    .configureCross(utestSettings)
     .settings(
       moduleName          := "univeq-scalaz",
       libraryDependencies += "org.scalaz" %%% "scalaz-core" % Ver.Scalaz)
@@ -116,10 +112,10 @@ object UnivEq extends Build {
   lazy val catsJS  = cats.js
   lazy val cats = crossProject
     .in(file("univeq-cats"))
-    .configure(commonSettings, publicationSettings)
+    .configureCross(commonSettings, publicationSettings)
     .dependsOn(univEq)
-    .configure(utestSettings)
+    .configureCross(utestSettings)
     .settings(
       moduleName          := "univeq-cats",
-      libraryDependencies += "org.typelevel" %%% "cats" % Ver.Cats)
+      libraryDependencies += "org.typelevel" %%% "cats-kernel" % Ver.Cats)
 }
