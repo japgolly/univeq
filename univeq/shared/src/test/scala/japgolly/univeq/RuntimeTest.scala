@@ -49,7 +49,9 @@ object RuntimeTest extends TestSuite {
       'option  - assertPass[Option[Int]](Some(2), None, Some(4))
 
       'enum    - assertPass(Colours.Amber, Colours.Green, Colours.Red)
+    }
 
+    'java{
       'class {
         compileError("clsI ==* clsL")
         assert(clsI == clsI)

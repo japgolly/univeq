@@ -49,6 +49,7 @@ object UnivEq {
   @inline implicit def univEqMap    [K: UnivEq, V: UnivEq]: UnivEq[Map   [K, V]] = force
 
   // Enums
+  @inline implicit def univEqEnumJava[A <: java.lang.Enum[A]]: UnivEq[A] = force
   @inline implicit def univEqEnumScala[A <: Enumeration#Value]: UnivEq[A] = force
 
   // Tuples
