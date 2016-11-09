@@ -34,23 +34,20 @@ object UnivEq {
   implicit val UnivEqByte   : UnivEq[Byte   ] = new UnivEq[Byte   ] {}
 
   // Scala
-          implicit val univEqString                       : UnivEq[String      ] = force
-  @inline implicit def univEqClass  [A]                   : UnivEq[Class    [A]] = force
-  @inline implicit def univEqClass_                       : UnivEq[Class    [_]] = force
-  @inline implicit def univEqOption [A: UnivEq]           : UnivEq[Option   [A]] = force
-  @inline implicit def univEqSet    [A: UnivEq]           : UnivEq[Set      [A]] = force
-  @inline implicit def univEqList   [A: UnivEq]           : UnivEq[List     [A]] = force
-  @inline implicit def univEqListSet[A: UnivEq]           : UnivEq[ListSet  [A]] = force
-  @inline implicit def univEqStream [A: UnivEq]           : UnivEq[Stream   [A]] = force
-  @inline implicit def univEqVector [A: UnivEq]           : UnivEq[Vector   [A]] = force
-  @inline implicit def univEqEither [A: UnivEq, B: UnivEq]: UnivEq[Either[A, B]] = force
-  @inline implicit def univEqEitherL[A: UnivEq, B        ]: UnivEq[Left  [A, B]] = force
-  @inline implicit def univEqEitherR[A        , B: UnivEq]: UnivEq[Right [A, B]] = force
-  @inline implicit def univEqMap    [K: UnivEq, V: UnivEq]: UnivEq[Map   [K, V]] = force
-
-  // Enums
-  @inline implicit def univEqEnumJava[A <: java.lang.Enum[A]]: UnivEq[A] = force
-  @inline implicit def univEqEnumScala[A <: Enumeration#Value]: UnivEq[A] = force
+          implicit val univEqString                         : UnivEq[String      ] = force
+  @inline implicit def univEqClass  [A]                     : UnivEq[Class    [A]] = force
+  @inline implicit def univEqClass_                         : UnivEq[Class    [_]] = force
+  @inline implicit def univEqOption [A: UnivEq]             : UnivEq[Option   [A]] = force
+  @inline implicit def univEqSet    [A: UnivEq]             : UnivEq[Set      [A]] = force
+  @inline implicit def univEqList   [A: UnivEq]             : UnivEq[List     [A]] = force
+  @inline implicit def univEqListSet[A: UnivEq]             : UnivEq[ListSet  [A]] = force
+  @inline implicit def univEqStream [A: UnivEq]             : UnivEq[Stream   [A]] = force
+  @inline implicit def univEqVector [A: UnivEq]             : UnivEq[Vector   [A]] = force
+  @inline implicit def univEqEither [A: UnivEq, B: UnivEq]  : UnivEq[Either[A, B]] = force
+  @inline implicit def univEqEitherL[A: UnivEq, B        ]  : UnivEq[Left  [A, B]] = force
+  @inline implicit def univEqEitherR[A        , B: UnivEq]  : UnivEq[Right [A, B]] = force
+  @inline implicit def univEqMap    [K: UnivEq, V: UnivEq]  : UnivEq[Map   [K, V]] = force
+  @inline implicit def univEqEnum   [A <: Enumeration#Value]: UnivEq[A]            = force
 
   // Tuples
   @inline implicit def univEqTuple2[A:UnivEq, B:UnivEq]: UnivEq[(A,B)] = force
@@ -81,7 +78,7 @@ object UnivEq {
   @inline implicit def univEqJBoolean              : UnivEq[jl.Boolean] = force
   @inline implicit def univEqJByte                 : UnivEq[jl.Byte   ] = force
   @inline implicit def univEqJShort                : UnivEq[jl.Short  ] = force
-  @inline implicit def univEqJEnum[A <: jl.Enum[A]]: UnivEq[jl.Enum[A]] = force
+  @inline implicit def univEqJEnum[A <: jl.Enum[A]]: UnivEq[A         ] = force
 
   // Derivation
   @inline def derive            [A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveAutoQuiet[A]
