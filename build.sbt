@@ -1,4 +1,4 @@
-version in ThisBuild := "1.0.2-SNAPSHOT"
+version in ThisBuild := "1.0.2"
 
 lazy val root      = UnivEqBuild.root
 lazy val rootJVM   = UnivEqBuild.rootJVM
