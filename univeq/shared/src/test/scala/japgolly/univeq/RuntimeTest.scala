@@ -29,6 +29,10 @@ object RuntimeTest extends TestSuite {
   val clsI = classOf[Int]
   val clsL = classOf[Long]
 
+  object Colours extends Enumeration {
+    val Red, Amber, Green = Value
+  }
+
   override def tests = TestSuite {
     'scala {
       'unit    - assertId(())
@@ -43,6 +47,8 @@ object RuntimeTest extends TestSuite {
       'string  - assertPass("x", "")
 
       'option  - assertPass[Option[Int]](Some(2), None, Some(4))
+
+      'enum    - assertPass(Colours.Amber, Colours.Green, Colours.Red)
 
       'class {
         compileError("clsI ==* clsL")

@@ -48,6 +48,9 @@ object UnivEq {
   @inline implicit def univEqEitherR[A        , B: UnivEq]: UnivEq[Right [A, B]] = force
   @inline implicit def univEqMap    [K: UnivEq, V: UnivEq]: UnivEq[Map   [K, V]] = force
 
+  // Enums
+  @inline implicit def univEqEnumScala[A <: Enumeration#Value]: UnivEq[A] = force
+
   // Tuples
   @inline implicit def univEqTuple2[A:UnivEq, B:UnivEq]: UnivEq[(A,B)] = force
   @inline implicit def univEqTuple3[A:UnivEq, B:UnivEq, C:UnivEq]: UnivEq[(A,B,C)] = force
