@@ -1,3 +1,9 @@
+# 1.0.2
+
+* Upgrade all dependencies.
+* Publish for Scala 2.12.0.
+* Add instance for scala.Enumeration.
+
 # 1.0.1
 
 * Add instance for scala.Either
