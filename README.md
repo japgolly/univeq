@@ -124,3 +124,10 @@ import japgolly.univeq.UnivEqCats._
 * Add a separate `HashCode` typeclass instead of just using `UnivEq` for maps, sets and similar.
 
 Note: I'm not working on these at the moment, but they'd be fantastic contributions.
+
+## Support
+
+If you like what I do
+—my OSS libraries, my contributions to other OSS libs, [my programming blog](https://japgolly.blogspot.com)—
+and you'd like to support me, more content, more lib maintenance, [please become a patron](https://www.patreon.com/japgolly)!
+I do all my OSS work unpaid so showing your support will make a big difference.
