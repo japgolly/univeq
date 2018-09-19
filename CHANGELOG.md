@@ -1,3 +1,43 @@
+# 1.0.3
+
+* Add instances for:
+  * `BigDecimal`
+  * `BigInt`
+  * `Double`
+  * `Float`
+  * `None`
+  * `Range`
+  * `Some`
+  * `java.lang.Double`
+  * `java.lang.Float`
+  * `java.time.Duration`
+  * `java.time.Instant`
+  * `java.time.LocalDate`
+  * `java.time.LocalDateTime`
+  * `java.time.LocalTime`
+  * `java.time.MonthDay`
+  * `java.time.OffsetDateTime`
+  * `java.time.OffsetTime`
+  * `java.time.Period`
+  * `java.time.Year`
+  * `java.time.YearMonth`
+  * `java.time.ZonedDateTime`
+  * `java.time.ZoneId`
+  * `java.time.ZoneOffset`
+  * `scala.collection.immutable.BitSet`
+  * `scala.collection.immutable.HashMap`
+  * `scala.collection.immutable.HashSet`
+  * `scala.collection.immutable.IntMap`
+  * `scala.collection.immutable.ListMap`
+  * `scala.collection.immutable.LongMap`
+  * `scala.collection.immutable.SortedMap`
+  * `scala.collection.immutable.SortedSet`
+  * `scala.collection.immutable.TreeMap`
+  * `scala.collection.immutable.TreeSet`
+  * `scala.concurrent.duration.Duration`
+  * `scala.concurrent.duration.FiniteDuration`
+* Upgrade all dependencies
+
 # 1.0.2
 
 * Upgrade all dependencies.
