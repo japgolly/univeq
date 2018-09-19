@@ -15,7 +15,7 @@ object JvmRuntimeTest extends TestSuite {
     }
   }
 
-  override def tests = TestSuite {
+  override def tests = Tests {
     'enum - assertPass(JavaEnum.BOB, JavaEnum.LOB, JavaEnum.LAW)
   }
 }

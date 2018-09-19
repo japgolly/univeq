@@ -33,7 +33,7 @@ object RuntimeTest extends TestSuite {
     val Red, Amber, Green = Value
   }
 
-  override def tests = TestSuite {
+  override def tests = Tests {
     'scala {
       'unit    - assertId(())
 
