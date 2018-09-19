@@ -1,7 +1,13 @@
 import sbt._
-import Keys._
+import sbt.Keys._
+import com.typesafe.sbt.pgp.PgpKeys
+import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
+import org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
 import org.scalajs.sbtplugin.ScalaJSPlugin
-import ScalaJSPlugin.autoImport._
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.{crossProject => _, CrossType => _, _}
+import sbtcrossproject.CrossPlugin.autoImport._
+import sbtrelease.ReleasePlugin.autoImport._
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
 import Lib._
 
 object UnivEqBuild {
@@ -33,18 +39,21 @@ object UnivEqBuild {
 
   val commonSettings = ConfigureBoth(
     _.settings(
-      organization             := "com.github.japgolly.univeq",
-      homepage                 := Some(url("https://github.com/japgolly/" + ghProject)),
-      licenses                 += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
-      startYear                := Some(2015),
-      scalaVersion             := Ver.Scala211,
-      crossScalaVersions       := Seq(Ver.Scala211, Ver.Scala212),
-      scalacOptions           ++= scalacFlags,
-      scalacOptions in Test   --= Seq("-Ywarn-dead-code"),
-      shellPrompt in ThisBuild := ((s: State) => Project.extract(s).currentRef.project + "> "),
-      triggeredMessage         := Watched.clearWhenTriggered,
-      incOptions               := incOptions.value.withNameHashing(true),
-      updateOptions            := updateOptions.value.withCachedResolution(true))
+      organization                  := "com.github.japgolly.univeq",
+      homepage                      := Some(url("https://github.com/japgolly/" + ghProject)),
+      licenses                      += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
+      startYear                     := Some(2015),
+      scalaVersion                  := Ver.Scala211,
+      crossScalaVersions            := Seq(Ver.Scala211, Ver.Scala212),
+      scalacOptions                ++= scalacFlags,
+      scalacOptions in Test        --= Seq("-Ywarn-dead-code"),
+      shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
+      triggeredMessage              := Watched.clearWhenTriggered,
+      incOptions                    := incOptions.value,
+      updateOptions                 := updateOptions.value.withCachedResolution(true),
+      releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+      releaseTagComment             := s"v${(version in ThisBuild).value}",
+      releaseVcsSign                := true)
     .configure(
       addCommandAliases(
         "/"   -> "project root",
@@ -93,7 +102,7 @@ object UnivEqBuild {
 
   lazy val univEqJVM = univEq.jvm
   lazy val univEqJS  = univEq.js
-  lazy val univEq = crossProject
+  lazy val univEq = crossProject(JSPlatform, JVMPlatform)
     .in(file("univeq"))
     .configureCross(commonSettings, publicationSettings, utestSettings)
     .bothConfigure(definesMacros)
@@ -101,7 +110,7 @@ object UnivEqBuild {
 
   lazy val scalazJVM = scalaz.jvm
   lazy val scalazJS  = scalaz.js
-  lazy val scalaz = crossProject
+  lazy val scalaz = crossProject(JSPlatform, JVMPlatform)
     .in(file("univeq-scalaz"))
     .configureCross(commonSettings, publicationSettings)
     .dependsOn(univEq)
@@ -112,7 +121,7 @@ object UnivEqBuild {
 
   lazy val catsJVM = cats.jvm
   lazy val catsJS  = cats.js
-  lazy val cats = crossProject
+  lazy val cats = crossProject(JSPlatform, JVMPlatform)
     .in(file("univeq-cats"))
     .configureCross(commonSettings, publicationSettings)
     .dependsOn(univEq)

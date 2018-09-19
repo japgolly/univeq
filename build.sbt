@@ -1,5 +1,3 @@
-version in ThisBuild := "1.0.3-SNAPSHOT"
-
 lazy val root      = UnivEqBuild.root
 lazy val rootJVM   = UnivEqBuild.rootJVM
 lazy val rootJS    = UnivEqBuild.rootJS

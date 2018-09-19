@@ -1,10 +1,10 @@
 import sbt._
 import Keys._
 import com.typesafe.sbt.pgp.PgpKeys._
-import org.scalajs.sbtplugin.ScalaJSPlugin
-import org.scalajs.sbtplugin.cross.CrossProject
-import ScalaJSPlugin._
-import ScalaJSPlugin.autoImport._
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.{crossProject => _, CrossType => _, _}
+import sbtcrossproject.CrossProject
+import sbtcrossproject.CrossPlugin.autoImport._
+import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
 
 object Lib {
   type CPE = CrossProject => CrossProject
@@ -67,13 +67,5 @@ object Lib {
     )
 
   def preventPublication: PE =
-    _.settings(
-      publish            := (),
-      publishLocal       := (),
-      publishSigned      := (),
-      publishLocalSigned := (),
-      publishArtifact    := false,
-      publishTo          := Some(Resolver.file("Unused transient repository", target.value / "fakepublish")),
-      packagedArtifacts  := Map.empty)
-    // .disablePlugins(plugins.IvyPlugin)
+    _.settings(skip in publish := true)
 }
