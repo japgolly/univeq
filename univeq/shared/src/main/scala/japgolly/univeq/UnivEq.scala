@@ -13,7 +13,7 @@ trait UnivEq[@specialized A] {
     a == b
 }
 
-object UnivEq {
+object UnivEq extends PlatformUnivEq {
 
   @inline def apply[A](implicit proof: UnivEq[A]): UnivEq[A] =
     proof

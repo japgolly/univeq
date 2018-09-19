@@ -36,6 +36,9 @@
   * `scala.collection.immutable.TreeSet`
   * `scala.concurrent.duration.Duration`
   * `scala.concurrent.duration.FiniteDuration`
+* Add JS instances for:
+  * `org.scalajs.dom.Element`
+  * `scalajs.js.UndefOr`
 * Upgrade all dependencies
 
 # 1.0.2

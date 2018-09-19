@@ -18,11 +18,12 @@ object UnivEqBuild {
     Lib.publicationSettings(ghProject)
 
   object Ver {
-    final val Cats     = "1.4.0"
-    final val MTest    = "0.6.5"
-    final val Scala211 = "2.11.12"
-    final val Scala212 = "2.12.6"
-    final val Scalaz   = "7.2.26"
+    final val Cats       = "1.4.0"
+    final val MTest      = "0.6.5"
+    final val Scala211   = "2.11.12"
+    final val Scala212   = "2.12.6"
+    final val Scalaz     = "7.2.26"
+    final val ScalaJsDom = "0.9.6"
   }
 
   def scalacFlags = Seq(
@@ -106,6 +107,7 @@ object UnivEqBuild {
     .configureCross(commonSettings, publicationSettings, utestSettings)
     .bothConfigure(definesMacros)
     .settings(moduleName := "univeq")
+    .jsSettings(libraryDependencies += "org.scala-js" %%% "scalajs-dom" % Ver.ScalaJsDom)
 
   lazy val scalazJVM = scalaz.jvm
   lazy val scalazJS  = scalaz.js
