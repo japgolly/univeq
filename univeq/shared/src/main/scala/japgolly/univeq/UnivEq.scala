@@ -25,15 +25,15 @@ object UnivEq extends PlatformUnivEq {
     UnivEqAnyRef.asInstanceOf[UnivEq[A]]
 
   // Primitives & core
-  implicit val univEqUnit   : UnivEq[Unit   ] = new UnivEq[Unit   ]{}
-  implicit val univEqChar   : UnivEq[Char   ] = new UnivEq[Char   ]{}
-  implicit val univEqShort  : UnivEq[Short  ] = new UnivEq[Short  ]{}
-  implicit val univEqByte   : UnivEq[Byte   ] = new UnivEq[Byte   ]{}
-  implicit val univEqLong   : UnivEq[Long   ] = new UnivEq[Long   ]{}
-  implicit val univEqInt    : UnivEq[Int    ] = new UnivEq[Int    ]{}
-  implicit def univEqFloat  : UnivEq[Float  ] = new UnivEq[Float  ]{}
-  implicit val univEqDouble : UnivEq[Double ] = new UnivEq[Double ]{}
-  implicit val univEqBoolean: UnivEq[Boolean] = new UnivEq[Boolean]{}
+  implicit val UnivEqBoolean: UnivEq[Boolean] = new UnivEq[Boolean]{}
+  implicit def UnivEqByte   : UnivEq[Byte   ] = new UnivEq[Byte   ]{}
+  implicit val UnivEqChar   : UnivEq[Char   ] = new UnivEq[Char   ]{}
+  implicit val UnivEqDouble : UnivEq[Double ] = new UnivEq[Double ]{}
+  implicit def UnivEqFloat  : UnivEq[Float  ] = new UnivEq[Float  ]{}
+  implicit val UnivEqInt    : UnivEq[Int    ] = new UnivEq[Int    ]{}
+  implicit val UnivEqLong   : UnivEq[Long   ] = new UnivEq[Long   ]{}
+  implicit def UnivEqShort  : UnivEq[Short  ] = new UnivEq[Short  ]{}
+  implicit val UnivEqUnit   : UnivEq[Unit   ] = new UnivEq[Unit   ]{}
   @inline implicit def univEqString: UnivEq[String] = force
 
   // Tuples

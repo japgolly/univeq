@@ -1,3 +1,7 @@
+# 1.0.4
+
+Unbreak backwards-compatibility
+
 # 1.0.3
 
 * Add instances for:
