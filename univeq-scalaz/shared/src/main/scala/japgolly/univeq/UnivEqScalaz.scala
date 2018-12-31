@@ -21,4 +21,4 @@ trait UnivEqScalaz {
     }
 }
 
-object UnivEqScalaz extends UnivEqExports
+object UnivEqScalaz extends UnivEqScalaz
