@@ -19,4 +19,4 @@ trait UnivEqCats {
     }
 }
 
-object UnivEqCats extends UnivEqExports
+object UnivEqCats extends UnivEqCats
