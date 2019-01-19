@@ -69,10 +69,10 @@ object Lib {
   def preventPublication: PE =
     _.settings(
       skip in publish    := true,
-      publish            := (),
-      publishLocal       := (),
-      publishSigned      := (),
-      publishLocalSigned := (),
+      publish            := {},
+      publishLocal       := {},
+      publishSigned      := {},
+      publishLocalSigned := {},
       publishArtifact    := false,
       publishTo          := Some(Resolver.file("Unused transient repository", target.value / "fakepublish")),
       packagedArtifacts  := Map.empty)

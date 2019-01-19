@@ -18,11 +18,11 @@ object UnivEqBuild {
     Lib.publicationSettings(ghProject)
 
   object Ver {
-    final val Cats       = "1.4.0"
-    final val MTest      = "0.6.5"
+    final val Cats       = "1.5.0"
+    final val MTest      = "0.6.6"
     final val Scala211   = "2.11.12"
-    final val Scala212   = "2.12.6"
-    final val Scalaz     = "7.2.26"
+    final val Scala212   = "2.12.8"
+    final val Scalaz     = "7.2.27"
     final val ScalaJsDom = "0.9.6"
   }
 
@@ -53,21 +53,7 @@ object UnivEqBuild {
       updateOptions                 := updateOptions.value.withCachedResolution(true),
       releasePublishArtifactsAction := PgpKeys.publishSigned.value,
       releaseTagComment             := s"v${(version in ThisBuild).value}",
-      releaseVcsSign                := true)
-    .configure(
-      addCommandAliases(
-        "/"   -> "project root",
-        "L"   -> "root/publishLocal",
-        "C"   -> "root/clean",
-        "T"   -> ";root/clean;root/test",
-        "TL"  -> ";T;L",
-        "c"   -> "compile",
-        "tc"  -> "test:compile",
-        "t"   -> "test",
-        "to"  -> "test-only",
-        "cc"  -> ";clean;compile",
-        "ctc" -> ";clean;test:compile",
-        "ct"  -> ";clean;test")))
+      releaseVcsSign                := true))
 
   def definesMacros: Project => Project =
     _.settings(

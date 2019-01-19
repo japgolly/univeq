@@ -19,3 +19,5 @@ target
 .cache
 .classpath
 .metadata
+.bloop
+.metals
