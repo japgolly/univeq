@@ -1,3 +1,7 @@
+# 1.0.5
+
+Fix `UnivEqCats` and `UnivEqScalaz` objects extending the wrong traits
+
 # 1.0.4
 
 Unbreak backwards-compatibility
