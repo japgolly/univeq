@@ -1,6 +1,8 @@
 # 1.0.5
 
-Fix `UnivEqCats` and `UnivEqScalaz` objects extending the wrong traits
+* Fix `UnivEqCats` and `UnivEqScalaz` objects extending the wrong traits
+* Upgrade versions
+* Use cats-data instead of cats-kernel and add instances for cats-data types
 
 # 1.0.4
 

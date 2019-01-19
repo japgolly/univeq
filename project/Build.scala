@@ -115,5 +115,5 @@ object UnivEqBuild {
     .configureCross(utestSettings)
     .settings(
       moduleName          := "univeq-cats",
-      libraryDependencies += "org.typelevel" %%% "cats-kernel" % Ver.Cats)
+      libraryDependencies += "org.typelevel" %%% "cats-core" % Ver.Cats)
 }
