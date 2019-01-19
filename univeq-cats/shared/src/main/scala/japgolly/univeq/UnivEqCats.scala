@@ -18,7 +18,7 @@ trait UnivEqCats {
 
   @inline implicit def univEqCatsOneAnd[F[_], A](implicit fa: UnivEq[F[A]], a: UnivEq[A]): UnivEq[OneAnd[F, A]] = derive
 
-  def monoidSet[A: UnivEq]: Monoid[Set[A]] =
+  def catsMonoidSet[A: UnivEq]: Monoid[Set[A]] =
     new Monoid[Set[A]] {
       override def empty = Set.empty
       override def combine(a: Set[A], b: Set[A]) = a | b
