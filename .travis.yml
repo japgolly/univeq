@@ -1,11 +1,18 @@
 language: scala
-sudo: false
-
-scala:
-  - 2.11.12
-  - 2.12.8
 jdk:
   - oraclejdk8
+
+scala:
+  - 2.12.8
+  - 2.11.12
+
+env:
+  - TARGET=JVM PRE=test:compile
+  - TARGET=JS  PRE=test:fastOptJS
+
+script:
+  - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/$PRE
+  - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/test
 
 stages:
   - name: test
@@ -14,15 +21,8 @@ stages:
 
 jobs:
   include:
-    # stage="test" if no stage is specified
-    - env:
-        - TARGET=JVM PRE=test:compile
-        - TARGET=JS  PRE=test:fastOptJS
-      script:
-        - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/$PRE
-        - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/test
-    # run ci-release only if previous stages passed
     - stage: release
+      env:
       script: sbt ci-release
 
 cache:
