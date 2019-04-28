@@ -15,12 +15,12 @@ stages:
 jobs:
   include:
     # stage="test" if no stage is specified
-		- env:
-				- TARGET=JVM PRE=test:compile
-				- TARGET=JS  PRE=test:fastOptJS
-			script:
-				- sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/$PRE
-				- sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/test
+    - env:
+        - TARGET=JVM PRE=test:compile
+        - TARGET=JS  PRE=test:fastOptJS
+      script:
+        - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/$PRE
+        - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/test
     # run ci-release only if previous stages passed
     - stage: release
       script: sbt ci-release
