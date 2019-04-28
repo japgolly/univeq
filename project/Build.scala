@@ -6,7 +6,6 @@ import org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
 import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.{crossProject => _, CrossType => _, _}
 import sbtcrossproject.CrossPlugin.autoImport._
-import sbtrelease.ReleasePlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
 import Lib._
 
@@ -47,13 +46,7 @@ object UnivEqBuild {
       crossScalaVersions            := Seq(Ver.Scala211, Ver.Scala212),
       scalacOptions                ++= scalacFlags,
       scalacOptions in Test        --= Seq("-Ywarn-dead-code"),
-      shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
-      triggeredMessage              := Watched.clearWhenTriggered,
-      incOptions                    := incOptions.value,
-      updateOptions                 := updateOptions.value.withCachedResolution(true),
-      releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-      releaseTagComment             := s"v${(version in ThisBuild).value}",
-      releaseVcsSign                := true))
+      shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> ")))
 
   def definesMacros: Project => Project =
     _.settings(
