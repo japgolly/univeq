@@ -12,6 +12,7 @@ object MacroUtils {
 abstract class MacroUtils {
   val c: scala.reflect.macros.blackbox.Context
   import c.universe._
+  import c.internal._
   import MacroUtils.FindSubClasses
 
   sealed trait TypeOrTree
@@ -216,34 +217,24 @@ abstract class MacroUtils {
    * @param t The subclass.
    */
   final def determineAdtType(T: Type, t: ClassSymbol): Type = {
-    val t2 =
-      if (t.typeParams.isEmpty)
-        t.toType
-      else if (t.isCaseClass)
-        caseClassTypeCtorToType(T, t)
-      else
-        t.toType
+    val t2 =  propagateTypeParams(T, t)
     require(t2 <:< T, s"$t2 is not a subtype of $T")
     t2
   }
 
-  /**
-   * Turns a case class type constructor into a type.
-   *
-   * Eg. caseClassTypeCtorToType(Option[Int], Some[_]) → Some[Int]
-   *
-   * Actually this doesn't work with type variance :(
-   */
-  private def caseClassTypeCtorToType(baseTrait: Type, caseclass: ClassSymbol): Type = {
-    val companion = caseclass.companion
-    val apply = companion.typeSignature.member(TermName("apply"))
-    if (apply == NoSymbol)
-      fail(s"Don't know how to turn $caseclass into a real type of $baseTrait; it's generic and its companion has no `apply` method.")
-
-    val matchArgs = apply.asMethod.paramLists.flatten.map { arg => pq"_" }
-    val name = TermName(c.freshName("x"))
-    c.typecheck(q"""(??? : $baseTrait) match {case $name@$companion(..$matchArgs) => $name }""").tpe
-  }
+  /** propagateTypeParams(Either[Int, Long], Right) -> Right[Long] */
+  def propagateTypeParams(root: Type, child: ClassSymbol): Type = {
+    // Thank you Jon Pretty!
+    // https://github.com/propensive/magnolia/blob/6d05a4b61b19b003d68505e2384d964ae3397e69/core/shared/src/main/scala/magnolia.scala#L411-L420
+    val subType     = child.asType.toType // FIXME: Broken for path dependent types
+    val typeParams  = child.asType.typeParams
+    val typeArgs    = thisType(child).baseType(root.typeSymbol).typeArgs
+    val mapping     = (typeArgs.map(_.typeSymbol), root.typeArgs).zipped.toMap
+    val newTypeArgs = typeParams.map(mapping.withDefault(_.asType.toType))
+    val applied     = appliedType(subType.typeConstructor, newTypeArgs)
+    val result      = existentialAbstraction(typeParams, applied)
+    result
+}
 
   final def flattenBlocks(trees: List[Tree]): Vector[Tree] = {
     @tailrec def go(acc: Vector[Tree], ts: List[Tree]): Vector[Tree] =

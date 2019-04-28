@@ -53,4 +53,13 @@ object DerivationTest {
     case class Blah2(i: NopeI) extends Blah
     NO("derive[Blah]")
   }
+
+  object Xxx {
+    sealed abstract class Elem[+T, +S]
+    sealed abstract class Flow[+S] extends Elem[Nothing, S]
+    case class T[+T](t: T)         extends Elem[T, Nothing]
+    case class S[+S](s: S)         extends Flow[S]
+    case class I(i: Int)           extends Flow[Nothing]
+    def univEq[TT: UnivEq, SS: UnivEq]: UnivEq[Elem[TT, SS]] = UnivEq.derive
+  }
 }

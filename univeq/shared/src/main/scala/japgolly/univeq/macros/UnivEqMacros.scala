@@ -5,6 +5,7 @@ import japgolly.univeq.UnivEq
 
 final class UnivEqMacros(val c: Context) extends MacroUtils {
   import c.universe._
+  import c.internal._
 
   val UnivEq = c.typeOf[UnivEq[_]]
 
