@@ -1,3 +1,7 @@
+# 1.0.6
+
+* Fix derivation of hierarchies that include abstract middles.
+
 # 1.0.5
 
 * Fix `UnivEqCats` and `UnivEqScalaz` objects extending the wrong traits
