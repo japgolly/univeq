@@ -7,6 +7,7 @@ import org.scalajs.sbtplugin.ScalaJSPlugin
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.{crossProject => _, CrossType => _, _}
 import sbtcrossproject.CrossPlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
+import xerial.sbt.Sonatype.autoImport._
 import Lib._
 
 object UnivEqBuild {
@@ -46,7 +47,8 @@ object UnivEqBuild {
       crossScalaVersions            := Seq(Ver.Scala211, Ver.Scala212),
       scalacOptions                ++= scalacFlags,
       scalacOptions in Test        --= Seq("-Ywarn-dead-code"),
-      shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> ")))
+      shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
+      sonatypeProfileName           := "com.github.japgolly"))
 
   def definesMacros: Project => Project =
     _.settings(
