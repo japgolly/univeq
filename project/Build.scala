@@ -18,10 +18,11 @@ object UnivEqBuild {
     Lib.publicationSettings(ghProject)
 
   object Ver {
-    final val Cats       = "1.6.1"
-    final val MTest      = "0.6.7"
+    final val Cats       = "2.0.0-M4"
+    final val MTest      = "0.6.9"
     final val Scala211   = "2.11.12"
     final val Scala212   = "2.12.8"
+    final val Scala213   = "2.13.0"
     final val Scalaz     = "7.2.27"
     final val ScalaJsDom = "0.9.7"
   }
@@ -43,8 +44,8 @@ object UnivEqBuild {
       homepage                      := Some(url("https://github.com/japgolly/" + ghProject)),
       licenses                      += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
       startYear                     := Some(2015),
-      scalaVersion                  := Ver.Scala212,
-      crossScalaVersions            := Seq(Ver.Scala211, Ver.Scala212),
+      scalaVersion                  := Ver.Scala213,
+      crossScalaVersions            := Seq(Ver.Scala211, Ver.Scala212, Ver.Scala213),
       scalacOptions                ++= scalacFlags,
       scalacOptions in Test        --= Seq("-Ywarn-dead-code"),
       shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
