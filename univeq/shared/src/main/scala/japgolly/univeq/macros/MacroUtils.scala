@@ -1,6 +1,7 @@
 package japgolly.univeq.macros
 
 import scala.annotation.tailrec
+import scala.collection.compat._
 
 object MacroUtils {
   sealed trait FindSubClasses
@@ -113,7 +114,7 @@ abstract class MacroUtils {
 
   final def crawlADT[A](tpe    : Type,
                         attempt: ClassSymbol => Option[A],
-                        giveUp : ClassSymbol => TraversableOnce[A]): Vector[A] = {
+                        giveUp : ClassSymbol => IterableOnce[A]): Vector[A] = {
     var seen = Set.empty[Type]
     val results = Vector.newBuilder[A]
 
@@ -229,7 +230,7 @@ abstract class MacroUtils {
     val subType     = child.asType.toType // FIXME: Broken for path dependent types
     val typeParams  = child.asType.typeParams
     val typeArgs    = thisType(child).baseType(root.typeSymbol).typeArgs
-    val mapping     = (typeArgs.map(_.typeSymbol), root.typeArgs).zipped.toMap
+    val mapping     = typeArgs.view.map(_.typeSymbol).lazyZip(root.typeArgs).toMap
     val newTypeArgs = typeParams.map(mapping.withDefault(_.asType.toType))
     val applied     = appliedType(subType.typeConstructor, newTypeArgs)
     val result      = existentialAbstraction(typeParams, applied)
@@ -452,11 +453,11 @@ abstract class MacroUtils {
     c.Expr[T => T](q"(t: $T) => t")
   }
 
-  def deterministicOrderT(ts: TraversableOnce[Type]): Vector[Type] =
-    ts.toVector.sortBy(_.typeSymbol.fullName)
+  def deterministicOrderT(ts: IterableOnce[Type]): Vector[Type] =
+    ts.iterator.toVector.sortBy(_.typeSymbol.fullName)
 
-  def deterministicOrderC(ts: TraversableOnce[ClassSymbol]): Vector[ClassSymbol] =
-    ts.toVector.sortBy(_.fullName)
+  def deterministicOrderC(ts: IterableOnce[ClassSymbol]): Vector[ClassSymbol] =
+    ts.iterator.toVector.sortBy(_.fullName)
 
   final def replaceMacroMethod(newMethod: String) =
     c.macroApplication match {

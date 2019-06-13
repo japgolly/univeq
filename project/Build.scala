@@ -94,6 +94,7 @@ object UnivEqBuild {
     .configureCross(commonSettings, publicationSettings, utestSettings)
     .bothConfigure(definesMacros)
     .settings(moduleName := "univeq")
+    .settings(libraryDependencies += "org.scala-lang.modules" %%% "scala-collection-compat" % "2.0.0")
     .jsSettings(libraryDependencies += "org.scala-js" %%% "scalajs-dom" % Ver.ScalaJsDom)
 
   lazy val scalazJVM = scalaz.jvm
