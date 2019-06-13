@@ -73,6 +73,7 @@ object UnivEq extends PlatformUnivEq {
   @inline implicit def univEqNone                              : UnivEq[None.type   ] = force
   @inline implicit def univEqOption    [A: UnivEq]             : UnivEq[Option   [A]] = force
   @inline implicit def univEqRange                             : UnivEq[Range       ] = force
+  @inline implicit def univEqSeq       [A: UnivEq]             : UnivEq[Seq      [A]] = force
   @inline implicit def univEqSet       [A: UnivEq]             : UnivEq[Set      [A]] = force
   @inline implicit def univEqSome      [A: UnivEq]             : UnivEq[Some     [A]] = force
   @inline implicit def univEqStream    [A: UnivEq]             : UnivEq[Stream   [A]] = force
