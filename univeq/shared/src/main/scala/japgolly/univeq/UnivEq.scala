@@ -94,6 +94,7 @@ object UnivEq extends PlatformUnivEq {
   @inline implicit def univEqSciSortedMap [A: UnivEq, B: UnivEq]: UnivEq[sci.SortedMap [A, B]] = force
   @inline implicit def univEqSciSortedSet [A: UnivEq           ]: UnivEq[sci.SortedSet [A]   ] = force
   @inline implicit def univEqSciTreeMap   [A: UnivEq, B: UnivEq]: UnivEq[sci.TreeMap   [A, B]] = force
+  @inline implicit def univEqSciTreeSeqMap[A: UnivEq, B: UnivEq]: UnivEq[sci.TreeSeqMap[A, B]] = force
   @inline implicit def univEqSciTreeSet   [A: UnivEq           ]: UnivEq[sci.TreeSet   [A]   ] = force
   @inline implicit def univEqSciVectorMap [A: UnivEq, B: UnivEq]: UnivEq[sci.VectorMap [A, B]] = force
 
