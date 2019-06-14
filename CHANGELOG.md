@@ -1,3 +1,5 @@
+# 1.0.7
+
 * Add `UnivEq.deriveFix{,Debug}`
 * Allow `UnivEq.derive` to derive fixpoint classes
 
