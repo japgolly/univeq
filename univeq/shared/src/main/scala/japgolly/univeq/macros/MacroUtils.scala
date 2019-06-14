@@ -89,7 +89,6 @@ abstract class MacroUtils {
         case NullaryMethodType(t) => t
         case t                    => t
       }
-
     val a = s.asTerm.name
     val A = paramType(a)
     (a, A)
@@ -217,13 +216,14 @@ abstract class MacroUtils {
    * @param t The subclass.
    */
   final def determineAdtType(T: Type, t: ClassSymbol): Type = {
-    val t2 =  propagateTypeParams(T, t)
+    val t2 = propagateTypeParams(T, t)
     require(t2 <:< T, s"$t2 is not a subtype of $T")
     t2
   }
 
   /** propagateTypeParams(Either[Int, Long], Right) -> Right[Long] */
-  def propagateTypeParams(root: Type, child: ClassSymbol): Type = {
+  def propagateTypeParams(root0: Type, child: ClassSymbol): Type = {
+    val root = root0.dealias
     // Thank you Jon Pretty!
     // https://github.com/propensive/magnolia/blob/6d05a4b61b19b003d68505e2384d964ae3397e69/core/shared/src/main/scala/magnolia.scala#L411-L420
     val subType     = child.asType.toType // FIXME: Broken for path dependent types

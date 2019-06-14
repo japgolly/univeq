@@ -122,10 +122,11 @@ object UnivEq extends PlatformUnivEq {
   @inline implicit def univEqJavaTimeZoneOffset    : UnivEq[jt.ZoneOffset    ] = force
 
   // Derivation
-  @inline def derive            [A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveAutoQuiet[A]
-  @inline def deriveDebug       [A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveAutoDebug[A]
-//@inline def deriveShallow     [A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveQuiet[A]
-//@inline def deriveShallowDebug[A <: AnyRef]: UnivEq[A] = macro macros.UnivEqMacros.deriveDebug[A]
+  @inline def derive     [A]: UnivEq[A] = macro macros.UnivEqMacros.deriveAutoQuiet[A]
+  @inline def deriveDebug[A]: UnivEq[A] = macro macros.UnivEqMacros.deriveAutoDebug[A]
+
+  @inline def deriveFix     [Fix[_[_]], F[_]]: UnivEq[Fix[F]] = macro macros.UnivEqMacros.deriveFixQuiet[Fix, F]
+  @inline def deriveFixDebug[Fix[_[_]], F[_]]: UnivEq[Fix[F]] = macro macros.UnivEqMacros.deriveFixDebug[Fix, F]
 
   object AutoDerive {
     @inline implicit def autoDeriveUnivEq[A <: AnyRef]: UnivEq[A] =

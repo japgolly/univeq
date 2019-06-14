@@ -1,5 +1,8 @@
+* Add `UnivEq.deriveFix{,Debug}`
+* Allow `UnivEq.derive` to derive fixpoint classes
+
 # 1.0.6
- 
+
 * Fix derivation of hierarchies that include abstract middles.
 * Upgrade all dependencies.
 
