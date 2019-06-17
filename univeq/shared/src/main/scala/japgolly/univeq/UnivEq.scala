@@ -24,6 +24,8 @@ object UnivEq extends PlatformUnivEq {
   def force[A]: UnivEq[A] =
     UnivEqAnyRef.asInstanceOf[UnivEq[A]]
 
+  @inline implicit def univEqNothing: UnivEq[Nothing] = force
+
   // Primitives & core
   implicit val UnivEqBoolean: UnivEq[Boolean] = new UnivEq[Boolean]{}
   implicit def UnivEqByte   : UnivEq[Byte   ] = new UnivEq[Byte   ]{}

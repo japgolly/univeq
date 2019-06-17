@@ -1,3 +1,7 @@
+# 1.0.8
+
+* Add `UnivEq[Nothing]` instance
+
 # 1.0.7
 
 * Add `UnivEq.deriveFix{,Debug}`
