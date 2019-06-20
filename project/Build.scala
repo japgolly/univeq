@@ -29,13 +29,16 @@ object UnivEqBuild {
   def scalacFlags = Seq(
     "-deprecation",
     "-unchecked",
-    "-Ywarn-dead-code",
-    "-Ywarn-value-discard",
     "-feature",
     "-language:postfixOps",
     "-language:implicitConversions",
     "-language:higherKinds",
-    "-language:existentials")
+    "-language:existentials",
+    "-opt:l:inline",
+    "-opt-inline-from:scala.**",
+    "-opt-inline-from:japgolly.univeq.**",
+    "-Ywarn-dead-code",
+    "-Ywarn-value-discard")
 
   val commonSettings = ConfigureBoth(
     _.settings(
