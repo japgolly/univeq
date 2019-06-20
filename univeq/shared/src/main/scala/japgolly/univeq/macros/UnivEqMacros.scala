@@ -5,16 +5,39 @@ import japgolly.univeq.UnivEq
 
 final class UnivEqMacros(val c: Context) extends MacroUtils {
   import c.universe._
-  import c.internal._
 
   val UnivEq = c.typeOf[UnivEq[_]]
+  def Unit   = c.typeOf[Unit]
 
-  def deriveAutoQuiet[T <: AnyRef : c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(false, true)
-  def deriveAutoDebug[T <: AnyRef : c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(true , true)
-  def deriveQuiet    [T <: AnyRef : c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(false, false)
-  def deriveDebug    [T <: AnyRef : c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(true , false)
+  def deriveFixQuiet[Fix[_[_]], F[_]]                (implicit Fix: c.WeakTypeTag[Fix[F]], F: c.WeakTypeTag[F[Unit]]): c.Expr[UnivEq[Fix[F]]] = deriveFix(false)
+  def deriveFixDebug[Fix[_[_]], F[_]]                (implicit Fix: c.WeakTypeTag[Fix[F]], F: c.WeakTypeTag[F[Unit]]): c.Expr[UnivEq[Fix[F]]] = deriveFix(true )
+  def deriveFix     [Fix[_[_]], F[_]](debug: Boolean)(implicit Fix: c.WeakTypeTag[Fix[F]], F: c.WeakTypeTag[F[Unit]]): c.Expr[UnivEq[Fix[F]]] = {
+    val fixF  = appliedType(Fix.tpe, F.tpe)
+    val fUnit = appliedType(F.tpe, Unit)
 
-  def derive[T <: AnyRef : c.WeakTypeTag](debug: Boolean, auto: Boolean): c.Expr[UnivEq[T]] = {
+    if (debug) {
+      println(sep)
+      println(s"Deriving UnivEq[$fixF]")
+      println(s"     via UnivEq[$fUnit]")
+    }
+
+    attemptProof(fixF, debug) {
+      val u = appliedType(UnivEq, fUnit)
+      tryInferImplicit(u) match {
+        case Some(i) => onFound(debug, fUnit, i)
+        case None    => ensureUnivEq(fUnit, debug, auto = true, allow = _ => false)
+      }
+    }
+  }
+
+  // ===================================================================================================================
+
+  def deriveAutoQuiet[T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(false, true)
+  def deriveAutoDebug[T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(true , true)
+  def deriveQuiet    [T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(false, false)
+  def deriveDebug    [T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(true , false)
+
+  def derive[T: c.WeakTypeTag](debug: Boolean, auto: Boolean): c.Expr[UnivEq[T]] = {
     val T = weakTypeOf[T]
 
     if (debug) {
@@ -22,7 +45,7 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
       println(s"Deriving UnivEq[$T]")
     }
 
-    def prove(): Unit = {
+    attemptProof(T, debug) {
       // Macros ignore implicit params in the enclosing method :(
       // Manually scan each declared implicit and maintain a whitelist.
       val whitelist = findUnivEqAmongstImplicitArgs
@@ -32,36 +55,7 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
 
       ensureUnivEq(T, debug, auto,
         s => whitelist.exists(w => (s <:< w) || (s.toString == w.toString)))
-
-      if (debug) println("Ok.")
     }
-
-    try {
-
-      /*
-      tryInferImplicit(appliedType(UnivEq, T), withMacrosDisabled = true) match {
-        case Some(s) =>
-          if (debug)
-            println("Implicit instance already in scope: " + show(s))
-        case None => prove()
-      }
-      */
-
-      prove()
-
-      val impl = q"_root_.japgolly.univeq.UnivEq.force[$T]"
-
-      c.Expr[UnivEq[T]](impl)
-
-    } catch {
-      case e: Throwable =>
-        if (debug) println(e)
-        throw e
-    } finally
-      if (debug) {
-        println(sep)
-        println()
-      }
   }
 
   def findUnivEqAmongstImplicitArgs: Set[Type] = {
@@ -84,9 +78,7 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
     if (debug) println(s"→ $T")
 
     def found(t: Any, p: Any): Unit =
-      if (debug) {
-        printf("%-80s = %s\n", t.toString, p.toString())
-      }
+      onFound(debug, t, p)
 
     val t = T.typeSymbol
     if (t.isType && allow(t.asType.toType))
@@ -98,14 +90,28 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
       for (p <- params) {
         val (pn, pt) = nameAndType(T, p)
         if (debug) println(s"  .$pn: $pt")
-        val u = appliedType(UnivEq, pt)
         if (allow(pt))
           found(pt, "implicit arg")
-        else
-          tryInferImplicit(u) match {
-            case Some(i) => found(pt, i)
-            case None    => fail(s"Implicit not found: $u") //init += q"implicitly[$u]"
+        else {
+
+          // pt = F[T[F]]
+          val isFixpointOfSelf =
+            T.typeArgs.contains(pt.typeConstructor) && pt.typeArgs == List(T)
+
+          if (isFixpointOfSelf) {
+            // F[Unit] is proof
+            val fUnit = appliedType(pt.typeConstructor, Unit)
+            val u = appliedType(UnivEq, fUnit)
+            val i = needInferImplicit(u)
+            found(pt, i)
+            found(pt, "<univeq:fix>")
+
+          } else {
+            val u = appliedType(UnivEq, pt)
+            val i = needInferImplicit(u)
+            found(pt, i)
           }
+        }
       }
     } else
       // ADT
@@ -135,4 +141,31 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
     ()
   }
 
+  // ===================================================================================================================
+
+  private def attemptProof[T](T: Type, debug: Boolean)(prove: => Any): c.Expr[UnivEq[T]] = {
+    try {
+
+      prove
+
+      if (debug) println("Ok.")
+
+      val impl = q"_root_.japgolly.univeq.UnivEq.force[$T]"
+      c.Expr[UnivEq[T]](impl)
+
+    } catch {
+      case e: Throwable =>
+        if (debug) println(e)
+        throw e
+    } finally
+      if (debug) {
+        println(sep)
+        println()
+      }
+  }
+
+  def onFound(debug: Boolean, t: Any, p: Any): Unit =
+    if (debug) {
+      printf("%-80s = %s\n", t.toString, p.toString())
+    }
 }

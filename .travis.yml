@@ -1,27 +1,27 @@
 language: scala
-sudo: false
 
 scala:
   - 2.12.8
   - 2.13.0
+
 jdk:
-  - oraclejdk8
+  - openjdk8
+
 env:
-    - TARGET=JVM PRE=test:compile
-    - TARGET=JS  PRE=test:fastOptJS
+  - TARGET=JVM PRE=test:compile
+  - TARGET=JS  PRE=test:fastOptJS
 
 script:
   - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/$PRE
   - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/test
 
-# Taken from https://github.com/typelevel/cats/blob/master/.travis.yml
+before_cache:
+  - rm -f $HOME/.ivy2/.sbt.ivy.lock
+  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -type f -delete
+  - find $HOME/.sbt -name "*.lock" -type f -delete
 cache:
   directories:
-  - $HOME/.sbt/0.13/dependency
-  - $HOME/.sbt/boot/scala*
-  - $HOME/.sbt/launchers
-  - $HOME/.ivy2/cache
-before_cache:
-  - find $HOME/.sbt -name "*.lock" -type f -delete
-  - find $HOME/.ivy2/cache -name "ivydata-*.properties" -type f -delete
+    - $HOME/.coursier
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
 
