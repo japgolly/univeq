@@ -29,6 +29,7 @@ trait ScalaUnivEq {
   // scala.collection.immutable
   @inline implicit def univEqSciArraySeq  [A: UnivEq           ]: UnivEq[sci.ArraySeq  [A]   ] = force
   @inline implicit def univEqSciBitSet    [A: UnivEq           ]: UnivEq[sci.BitSet          ] = force
+  @inline implicit def univEqScalaMap     [A: UnivEq, B: UnivEq]: UnivEq[sci.Map       [A, B]] = force
   @inline implicit def univEqSciHashMap   [A: UnivEq, B: UnivEq]: UnivEq[sci.HashMap   [A, B]] = force
   @inline implicit def univEqSciHashSet   [A: UnivEq           ]: UnivEq[sci.HashSet   [A]   ] = force
   @inline implicit def univEqSciIndexedSeq[A: UnivEq           ]: UnivEq[sci.IndexedSeq[A]   ] = force
