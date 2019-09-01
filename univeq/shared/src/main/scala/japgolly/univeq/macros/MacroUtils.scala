@@ -230,7 +230,7 @@ abstract class MacroUtils {
     val subType     = child.asType.toType // FIXME: Broken for path dependent types
     val typeParams  = child.asType.typeParams
     val typeArgs    = thisType(child).baseType(root.typeSymbol).typeArgs
-    val mapping     = (typeArgs.map(_.typeSymbol), root.typeArgs).zipped.toMap
+    val mapping     = typeArgs.iterator.map(_.typeSymbol).zip(root.typeArgs.iterator).toMap
     val newTypeArgs = typeParams.map(mapping.withDefault(_.asType.toType))
     val applied     = appliedType(subType.typeConstructor, newTypeArgs)
     val result      = existentialAbstraction(typeParams, applied)
