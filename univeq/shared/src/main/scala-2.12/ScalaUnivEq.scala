@@ -2,7 +2,6 @@ package japgolly.univeq
 
 import scala.collection.{immutable => sci}
 import scala.concurrent.{duration => sd}
-import scala.collection._
 import UnivEq.force
 
 trait ScalaUnivEq {
@@ -26,7 +25,7 @@ trait ScalaUnivEq {
   @inline implicit def univEqVector    [A: UnivEq]             : UnivEq[Vector   [A]] = force
 
   // scala.collection.immutable
-  @inline implicit def univEqSciBitSet    [A: UnivEq           ]: UnivEq[sci.BitSet          ] = force
+  @inline implicit def univEqSciBitSet                          : UnivEq[sci.BitSet          ] = force
   @inline implicit def univEqSciHashMap   [A: UnivEq, B: UnivEq]: UnivEq[sci.HashMap   [A, B]] = force
   @inline implicit def univEqSciHashSet   [A: UnivEq           ]: UnivEq[sci.HashSet   [A]   ] = force
   @inline implicit def univEqSciIndexedSeq[A: UnivEq           ]: UnivEq[sci.IndexedSeq[A]   ] = force

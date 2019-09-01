@@ -2,7 +2,6 @@ package japgolly.univeq
 
 import scala.collection.{immutable => sci}
 import scala.concurrent.{duration => sd}
-import scala.collection._
 import UnivEq.force
 
 trait ScalaUnivEq {
@@ -28,7 +27,7 @@ trait ScalaUnivEq {
 
   // scala.collection.immutable
   @inline implicit def univEqSciArraySeq  [A: UnivEq           ]: UnivEq[sci.ArraySeq  [A]   ] = force
-  @inline implicit def univEqSciBitSet    [A: UnivEq           ]: UnivEq[sci.BitSet          ] = force
+  @inline implicit def univEqSciBitSet                          : UnivEq[sci.BitSet          ] = force
   @inline implicit def univEqSciHashMap   [A: UnivEq, B: UnivEq]: UnivEq[sci.HashMap   [A, B]] = force
   @inline implicit def univEqSciHashSet   [A: UnivEq           ]: UnivEq[sci.HashSet   [A]   ] = force
   @inline implicit def univEqSciIndexedSeq[A: UnivEq           ]: UnivEq[sci.IndexedSeq[A]   ] = force
@@ -37,9 +36,7 @@ trait ScalaUnivEq {
   @inline implicit def univEqSciListMap   [A: UnivEq, B: UnivEq]: UnivEq[sci.ListMap   [A, B]] = force
   @inline implicit def univEqSciListSet   [A: UnivEq           ]: UnivEq[sci.ListSet   [A]   ] = force
   @inline implicit def univEqSciLongMap   [A: UnivEq           ]: UnivEq[sci.LongMap   [A]   ] = force
-  @inline implicit def univEqSciMap       [A: UnivEq, B: UnivEq]: UnivEq[sci.Map       [A, B]] = force
   @inline implicit def univEqSciQueue     [A: UnivEq           ]: UnivEq[sci.Queue     [A]   ] = force
-  @inline implicit def univEqSciSet       [A: UnivEq           ]: UnivEq[sci.Set       [A]   ] = force
   @inline implicit def univEqSciSortedMap [A: UnivEq, B: UnivEq]: UnivEq[sci.SortedMap [A, B]] = force
   @inline implicit def univEqSciSortedSet [A: UnivEq           ]: UnivEq[sci.SortedSet [A]   ] = force
   @inline implicit def univEqSciTreeMap   [A: UnivEq, B: UnivEq]: UnivEq[sci.TreeMap   [A, B]] = force
