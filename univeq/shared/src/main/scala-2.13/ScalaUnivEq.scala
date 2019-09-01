@@ -39,6 +39,7 @@ trait ScalaUnivEq {
   @inline implicit def univEqSciLongMap   [A: UnivEq           ]: UnivEq[sci.LongMap   [A]   ] = force
   @inline implicit def univEqSciMap       [A: UnivEq, B: UnivEq]: UnivEq[sci.Map       [A, B]] = force
   @inline implicit def univEqSciQueue     [A: UnivEq           ]: UnivEq[sci.Queue     [A]   ] = force
+  @inline implicit def univEqSciSet       [A: UnivEq           ]: UnivEq[sci.Set       [A]   ] = force
   @inline implicit def univEqSciSortedMap [A: UnivEq, B: UnivEq]: UnivEq[sci.SortedMap [A, B]] = force
   @inline implicit def univEqSciSortedSet [A: UnivEq           ]: UnivEq[sci.SortedSet [A]   ] = force
   @inline implicit def univEqSciTreeMap   [A: UnivEq, B: UnivEq]: UnivEq[sci.TreeMap   [A, B]] = force
