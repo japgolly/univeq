@@ -20,7 +20,7 @@ object UnivEqBuild {
     final val MTest           = "0.6.9"
     final val Scala212        = "2.12.8"
     final val Scala213        = "2.13.0"
-    final val Scalaz          = "7.2.28"
+    final val Scalaz          = "7.2.29"
     final val ScalaCollCompat = "2.1.2"
     final val ScalaJsDom      = "0.9.7"
   }
