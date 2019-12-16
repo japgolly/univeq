@@ -50,7 +50,6 @@ object UnivEqBuild {
       scalacOptions                ++= scalacFlags,
       scalacOptions in Test        --= Seq("-Ywarn-dead-code"),
       shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
-      triggeredMessage              := Watched.clearWhenTriggered,
       incOptions                    := incOptions.value,
       updateOptions                 := updateOptions.value.withCachedResolution(true),
       releasePublishArtifactsAction := PgpKeys.publishSigned.value,
