@@ -16,13 +16,13 @@ object UnivEqBuild {
     Lib.publicationSettings(ghProject)
 
   object Ver {
-    final val Cats            = "2.0.0-RC2"
+    final val Cats            = "2.0.0"
     final val MTest           = "0.6.9"
-    final val Scala212        = "2.12.8"
-    final val Scala213        = "2.13.0"
+    final val Scala212        = "2.12.10"
+    final val Scala213        = "2.13.1"
     final val Scalaz          = "7.2.28"
-    final val ScalaCollCompat = "2.1.2"
-    final val ScalaJsDom      = "0.9.7"
+    final val ScalaCollCompat = "2.1.3"
+    final val ScalaJsDom      = "0.9.8"
   }
 
   def scalacFlags = Seq(
@@ -50,7 +50,6 @@ object UnivEqBuild {
       scalacOptions                ++= scalacFlags,
       scalacOptions in Test        --= Seq("-Ywarn-dead-code"),
       shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
-      triggeredMessage              := Watched.clearWhenTriggered,
       incOptions                    := incOptions.value,
       updateOptions                 := updateOptions.value.withCachedResolution(true),
       releasePublishArtifactsAction := PgpKeys.publishSigned.value,
