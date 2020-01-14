@@ -7,6 +7,14 @@ scala:
 jdk:
   - openjdk8
 
+install:
+  - . $HOME/.nvm/nvm.sh
+  - nvm install 12
+  - nvm use 12
+  - export NODE_PATH="$(npm config get prefix)"/lib/node_modules
+  - npm install
+  - npm install jsdom source-map-support
+
 env:
   - TARGET=JVM PRE=test:compile
   - TARGET=JS  PRE=test:fastOptJS
