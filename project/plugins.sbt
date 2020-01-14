@@ -8,5 +8,5 @@ addSbtPlugin("com.github.gseitz"  % "sbt-release"              % "1.0.12")
 
 libraryDependencies ++= {
   if (scalaJSVersion.startsWith("0.6.")) Nil
-  else Seq("org.scala-js" %% "scalajs-env-jsdom-nodejs" % scalaJSVersion)
+  else Seq("org.scala-js" %% "scalajs-env-jsdom-nodejs" % "1.0.0-RC3")
 }
