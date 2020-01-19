@@ -17,13 +17,13 @@ object UnivEqBuild {
     Lib.publicationSettings(ghProject)
 
   object Ver {
-    final val Cats            = "2.1.0"
-    final val MTest           = "0.7.3"
-    final val Scala212        = "2.12.10"
-    final val Scala213        = "2.13.1"
-    final val Scalaz          = "7.2.30"
-    final val ScalaCollCompat = "2.1.3"
-    final val ScalaJsDom      = "0.9.8"
+    val Cats            = "2.1.0"
+    val MTest           = "0.7.3"
+    val Scala212        = "2.12.10"
+    val Scala213        = "2.13.1"
+    val Scalaz          = "7.2.30"
+    val ScalaCollCompat = "2.1.3"
+    val ScalaJsDom      = "0.9.8"
   }
 
   def scalacFlags = Seq(
