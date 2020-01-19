@@ -2,13 +2,14 @@ import sbt._
 import sbt.Keys._
 import com.typesafe.sbt.pgp.PgpKeys
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
-import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.{crossProject => _, CrossType => _, _}
-import sbtcrossproject.CrossPlugin.autoImport._
+import org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
+import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbtrelease.ReleasePlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
 import Lib._
 
 object UnivEqBuild {
+  import sbtcrossproject.CrossPlugin.autoImport._
 
   private val ghProject = "univeq"
 
@@ -16,8 +17,8 @@ object UnivEqBuild {
     Lib.publicationSettings(ghProject)
 
   object Ver {
-    final val Cats            = "2.0.0"
-    final val MTest           = "0.6.9"
+    final val Cats            = "2.1.0"
+    final val MTest           = "0.7.3"
     final val Scala212        = "2.12.10"
     final val Scala213        = "2.13.1"
     final val Scalaz          = "7.2.30"
@@ -69,8 +70,7 @@ object UnivEqBuild {
       libraryDependencies += "com.lihaoyi" %%% "utest" % Ver.MTest % "test",
       testFrameworks      += new TestFramework("utest.runner.Framework")))
     .jsConfigure(
-      // Not mandatory; just faster.
-      _.settings(jsEnv in Test := PhantomJSEnv().value))
+      _.settings(jsEnv in Test := new JSDOMNodeJSEnv))
 
   lazy val root =
     Project("root", file("."))
