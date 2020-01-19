@@ -1,3 +1,17 @@
+# 1.2.0
+
+* Upgrade Cats to 2.1.0
+* Add Scala.JS 1.0.0-RC2 support
+
+# 1.1.0
+
+* Add Scala 2.13 support
+* Drop Scala 2.11 support
+* Upgrade Cats to 2.0.0
+* Upgrade Scalaz to 7.2.30
+* Upgrade Scala.JS to 0.6.31
+* Upgrade scalajs-dom to 0.9.8
+
 # 1.0.8
 
 * Add `UnivEq[Nothing]` instance
