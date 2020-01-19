@@ -4,7 +4,7 @@ val scalaJSVersion =
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.1")
 addSbtPlugin("org.scala-js"       % "sbt-scalajs"              % scalaJSVersion)
 addSbtPlugin("com.jsuereth"       % "sbt-pgp"                  % "1.1.2")
-addSbtPlugin("com.github.gseitz"  % "sbt-release"              % "1.0.12")
+addSbtPlugin("com.github.gseitz"  % "sbt-release"              % "1.0.13")
 
 libraryDependencies ++= {
   if (scalaJSVersion.startsWith("0.6.")) Nil
