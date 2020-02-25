@@ -17,7 +17,7 @@ object UnivEqBuild {
     Lib.publicationSettings(ghProject)
 
   object Ver {
-    val Cats            = "2.1.0"
+    val Cats            = "2.1.1"
     val MTest           = "0.7.3"
     val Scala212        = "2.12.10"
     val Scala213        = "2.13.1"
