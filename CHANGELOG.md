@@ -1,3 +1,8 @@
+# 1.2.1
+
+* Upgrade deps
+* Scala.JS 1.0 support
+
 # 1.2.0
 
 * Upgrade Cats to 2.1.0
