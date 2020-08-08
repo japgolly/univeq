@@ -23,7 +23,7 @@ object UnivEqBuild {
     val Scala213        = "2.13.1"
     val Scalaz          = "7.2.30"
     val ScalaCollCompat = "2.1.6"
-    val ScalaJsDom      = "1.0.0"
+    val ScalaJsDom      = "1.1.0"
   }
 
   def scalacFlags = Seq(
