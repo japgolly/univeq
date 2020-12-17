@@ -1,3 +1,8 @@
+# 1.3.0
+
+* Upgrade deps
+* Drop Scala.JS 0.6 support
+
 # 1.2.1
 
 * Upgrade deps

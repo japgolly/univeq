@@ -1,6 +1,6 @@
 import sbt._
 import Keys._
-import com.typesafe.sbt.pgp.PgpKeys._
+import com.jsuereth.sbtpgp.PgpKeys._
 import sbtcrossproject.CrossProject
 import sbtcrossproject.CrossPlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
