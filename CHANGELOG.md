@@ -1,13 +1,9 @@
-# 1.3.1
+# 1.3.0
 
 * Add `UnivEq[UUID]`
 * Add `UnivEq.deriveEmpty` for trait / abstract classes with no concrete subtypes
-* Upgrade deps
-
-# 1.3.0
-
-* Upgrade deps
 * Drop Scala.JS 0.6 support
+* Upgrade deps
 
 # 1.2.1
 
