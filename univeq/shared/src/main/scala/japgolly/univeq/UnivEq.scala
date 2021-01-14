@@ -93,6 +93,9 @@ object UnivEq extends ScalaUnivEq with PlatformUnivEq {
   @inline def derive     [A]: UnivEq[A] = macro macros.UnivEqMacros.deriveAutoQuiet[A]
   @inline def deriveDebug[A]: UnivEq[A] = macro macros.UnivEqMacros.deriveAutoDebug[A]
 
+  @inline def deriveEmpty     [A]: UnivEq[A] = macro macros.UnivEqMacros.deriveEmptyQuiet[A]
+  @inline def deriveEmptyDebug[A]: UnivEq[A] = macro macros.UnivEqMacros.deriveEmptyDebug[A]
+
   @inline def deriveFix     [Fix[_[_]], F[_]]: UnivEq[Fix[F]] = macro macros.UnivEqMacros.deriveFixQuiet[Fix, F]
   @inline def deriveFixDebug[Fix[_[_]], F[_]]: UnivEq[Fix[F]] = macro macros.UnivEqMacros.deriveFixDebug[Fix, F]
 

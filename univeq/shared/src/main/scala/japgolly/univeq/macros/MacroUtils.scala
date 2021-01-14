@@ -95,7 +95,7 @@ abstract class MacroUtils {
     (a, A)
   }
 
-  final def ensureValidAdtBase(tpe: Type): ClassSymbol = {
+  final def ensureValidAdtBase(tpe: Type, requireSubclasses: Boolean = true): ClassSymbol = {
     tpe.typeConstructor // https://issues.scala-lang.org/browse/SI-7755
     val sym = tpe.typeSymbol.asClass
 
@@ -105,7 +105,7 @@ abstract class MacroUtils {
     if (!(sym.isAbstract || sym.isTrait))
       fail(s"${sym.name} must be abstract or a trait.")
 
-    if (sym.knownDirectSubclasses.isEmpty)
+    if (requireSubclasses && sym.knownDirectSubclasses.isEmpty)
       fail(s"${sym.name} does not have any sub-classes. This may happen due to a limitation of scalac (SI-7046). 95% fixed in Scala 2.11.11 & 2.12.1.")
 
     sym

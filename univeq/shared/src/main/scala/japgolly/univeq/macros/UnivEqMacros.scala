@@ -32,6 +32,41 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
 
   // ===================================================================================================================
 
+  def deriveEmptyQuiet[T: c.WeakTypeTag]                : c.Expr[UnivEq[T]] = deriveEmpty(false)
+  def deriveEmptyDebug[T: c.WeakTypeTag]                : c.Expr[UnivEq[T]] = deriveEmpty(true )
+  def deriveEmpty     [T: c.WeakTypeTag](debug: Boolean): c.Expr[UnivEq[T]] = {
+
+    def ensureEmpty(T: Type): Unit = {
+      if (debug)
+        println(s"  Checking $T ...")
+
+      val t = T.typeSymbol
+
+      if (!t.isType)
+        fail(s"Don't know how to handle $t which is not a type.")
+
+      val sym = ensureValidAdtBase(T, requireSubclasses = false)
+      for (s <- sym.knownDirectSubclasses) {
+        if (!s.isType)
+          fail(s"Don't know how to handle sub-type $s which is not a type.")
+        ensureEmpty(s.asType.toType)
+      }
+    }
+
+    val T = weakTypeOf[T]
+
+    if (debug) {
+      println(sep)
+      println(s"Deriving UnivEq for empty $T")
+    }
+
+    attemptProof(T, debug) {
+      ensureEmpty(T)
+    }
+  }
+
+  // ===================================================================================================================
+
   def deriveAutoQuiet[T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(false, true)
   def deriveAutoDebug[T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(true , true)
   def deriveQuiet    [T: c.WeakTypeTag]: c.Expr[UnivEq[T]] = derive(false, false)

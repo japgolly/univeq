@@ -1,6 +1,7 @@
 # 1.3.1
 
 * Add `UnivEq[UUID]`
+* Add `UnivEq.deriveEmpty` for trait / abstract classes with no concrete subtypes
 * Upgrade deps
 
 # 1.3.0
