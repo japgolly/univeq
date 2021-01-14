@@ -2,6 +2,7 @@ package japgolly.univeq
 
 import java.{lang => jl}
 import java.{time => jt}
+import java.{util => ju}
 
 /**
  * Universal equality.
@@ -70,6 +71,7 @@ object UnivEq extends ScalaUnivEq with PlatformUnivEq {
   @inline implicit def univEqJByte                 : UnivEq[jl.Byte   ] = force
   @inline implicit def univEqJShort                : UnivEq[jl.Short  ] = force
   @inline implicit def univEqJEnum[A <: jl.Enum[A]]: UnivEq[A         ] = force
+  @inline implicit def univEqUUID                  : UnivEq[ju.UUID   ] = force
 
   // java.time
   @inline implicit def univEqJavaTimeDuration      : UnivEq[jt.Duration      ] = force

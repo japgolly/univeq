@@ -1,3 +1,8 @@
+# 1.3.1
+
+* Add `UnivEq[UUID]`
+* Upgrade deps
+
 # 1.3.0
 
 * Upgrade deps
