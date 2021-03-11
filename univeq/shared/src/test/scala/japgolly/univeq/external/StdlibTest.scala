@@ -2,7 +2,9 @@ package japgolly.univeq.external
 // In external package so that univeq._ isn't imported
 
 import japgolly.univeq.UnivEq
+import scala.annotation.nowarn
 
+@nowarn("cat=deprecation")
 object StdlibTest {
 
   UnivEq[BigDecimal]

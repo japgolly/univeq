@@ -17,12 +17,12 @@ object UnivEqBuild {
     Lib.publicationSettings(ghProject)
 
   object Ver {
-    val Cats            = "2.3.1"
-    val MTest           = "0.7.5"
-    val Scala212        = "2.12.11"
-    val Scala213        = "2.13.4"
-    val Scalaz          = "7.2.30"
-    val ScalaCollCompat = "2.3.2"
+    val Cats            = "2.4.2"
+    val MTest           = "0.7.7"
+    val Scala212        = "2.12.13"
+    val Scala213        = "2.13.5"
+    val Scalaz          = "7.2.31"
+    val ScalaCollCompat = "2.4.2"
     val ScalaJsDom      = "1.1.0"
   }
 
