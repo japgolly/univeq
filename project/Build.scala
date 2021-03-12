@@ -1,6 +1,7 @@
 import sbt._
 import sbt.Keys._
 import com.jsuereth.sbtpgp.PgpKeys
+import dotty.tools.sbtplugin.DottyPlugin.autoImport._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
@@ -17,7 +18,7 @@ object UnivEqBuild {
   private val publicationSettings =
     Lib.publicationSettings(ghProject)
 
-  def scalacFlags = Seq(
+  def scalacCommonFlags = Seq(
     "-deprecation",
     "-unchecked",
     "-feature",
@@ -25,11 +26,19 @@ object UnivEqBuild {
     "-language:implicitConversions",
     "-language:higherKinds",
     "-language:existentials",
+  )
+
+  def scalac2Flags = Seq(
     "-opt:l:inline",
     "-opt-inline-from:scala.**",
     "-opt-inline-from:japgolly.univeq.**",
     "-Ywarn-dead-code",
-    "-Ywarn-value-discard")
+    "-Ywarn-value-discard",
+  )
+
+  def scalac3Flags = Seq(
+    "-source", "3.0-migration",
+  )
 
   val commonSettings = ConfigureBoth(
     _.settings(
@@ -37,9 +46,14 @@ object UnivEqBuild {
       homepage                      := Some(url("https://github.com/japgolly/" + ghProject)),
       licenses                      += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
       startYear                     := Some(2015),
-      scalaVersion                  := Ver.Scala213,
-      crossScalaVersions            := Seq(Ver.Scala212, Ver.Scala213),
-      scalacOptions                ++= scalacFlags,
+      // scalaVersion                  := Ver.Scala213,
+      scalaVersion                  := Ver.Scala3,
+      crossScalaVersions            := Seq(Ver.Scala212, Ver.Scala213, Ver.Scala3),
+      scalacOptions                ++= scalacCommonFlags,
+      scalacOptions                ++= byScalaVersion {
+                                         case (2, _) => scalac2Flags
+                                         case (3, _) => scalac3Flags
+                                       }.value,
       scalacOptions in Test        --= Seq("-Ywarn-dead-code"),
       shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
       testFrameworks                := Nil,
@@ -51,8 +65,9 @@ object UnivEqBuild {
 
   def definesMacros: Project => Project =
     _.settings(
-      scalacOptions += "-language:experimental.macros",
-      libraryDependencies += Dep.ScalaCompiler.value % Provided)
+      scalacOptions       ++= (if (isDotty.value) Nil else Seq("-language:experimental.macros")),
+      libraryDependencies ++= (if (isDotty.value) Nil else Seq(Dep.ScalaCompiler.value % Provided)),
+    )
 
   def utestSettings = ConfigureBoth(
     _.settings(
@@ -80,7 +95,7 @@ object UnivEqBuild {
   lazy val univEqJS  = univEq.js
   lazy val univEq = crossProject(JSPlatform, JVMPlatform)
     .in(file("univeq"))
-    .configureCross(commonSettings, publicationSettings, utestSettings)
+    .configureCross(commonSettings, crossProjectScalaDirs, publicationSettings, utestSettings)
     .bothConfigure(definesMacros)
     .settings(
       moduleName := "univeq",

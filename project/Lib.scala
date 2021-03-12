@@ -9,6 +9,31 @@ object Lib {
   type CPE = CrossProject => CrossProject
   type PE = Project => Project
 
+  def byScalaVersion[A](f: PartialFunction[(Long, Long), Seq[A]]): Def.Initialize[Seq[A]] =
+    Def.setting(CrossVersion.partialVersion(scalaVersion.value).flatMap(f.lift).getOrElse(Nil))
+
+  def crossProjectScalaDirs: CPE =
+    _.settings(
+      unmanagedSourceDirectories in Compile ++= {
+        val root   = (baseDirectory in Compile).value / ".."
+        val shared = root / "shared" / "src" / "main"
+        CrossVersion.partialVersion(scalaVersion.value) match {
+          case Some((2, _))  => Seq(shared / "scala-2")
+          case Some((3, _))  => Seq(shared / "scala-3")
+          case _             => Nil
+        }
+      },
+      unmanagedSourceDirectories in Test ++= {
+        val root   = (baseDirectory in Test).value / ".."
+        val shared = root / "shared" / "src" / "test"
+        CrossVersion.partialVersion(scalaVersion.value) match {
+          case Some((2, _))  => Seq(shared / "scala-2")
+          case Some((3, _))  => Seq(shared / "scala-3")
+          case _             => Nil
+        }
+      }
+    )
+
   class ConfigureBoth(val jvm: PE, val js: PE) {
     def jvmConfigure(f: PE) = new ConfigureBoth(f compose jvm, js)
     def  jsConfigure(f: PE) = new ConfigureBoth(jvm, f compose js)
