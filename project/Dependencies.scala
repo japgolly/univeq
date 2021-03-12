@@ -12,7 +12,7 @@ object Dependencies {
     val Scala213        = "2.13.5"
     val ScalaCollCompat = "2.4.2"
     val ScalaJsDom      = "1.1.0"
-    val Scalaz          = "7.2.31"
+    val Scalaz          = "7.3.3"
 
     // Internal
     val MTest           = "0.7.7"
