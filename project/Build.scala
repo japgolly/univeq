@@ -4,27 +4,18 @@ import com.jsuereth.sbtpgp.PgpKeys
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+import sbtcrossproject.CrossPlugin.autoImport._
 import sbtrelease.ReleasePlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
-import Lib._
 
 object UnivEqBuild {
-  import sbtcrossproject.CrossPlugin.autoImport._
+  import Dependencies._
+  import Lib._
 
   private val ghProject = "univeq"
 
   private val publicationSettings =
     Lib.publicationSettings(ghProject)
-
-  object Ver {
-    val Cats            = "2.3.1"
-    val MTest           = "0.7.5"
-    val Scala212        = "2.12.11"
-    val Scala213        = "2.13.4"
-    val Scalaz          = "7.2.30"
-    val ScalaCollCompat = "2.3.2"
-    val ScalaJsDom      = "1.1.0"
-  }
 
   def scalacFlags = Seq(
     "-deprecation",
@@ -51,6 +42,7 @@ object UnivEqBuild {
       scalacOptions                ++= scalacFlags,
       scalacOptions in Test        --= Seq("-Ywarn-dead-code"),
       shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
+      testFrameworks                := Nil,
       incOptions                    := incOptions.value,
       updateOptions                 := updateOptions.value.withCachedResolution(true),
       releasePublishArtifactsAction := PgpKeys.publishSigned.value,
@@ -60,14 +52,11 @@ object UnivEqBuild {
   def definesMacros: Project => Project =
     _.settings(
       scalacOptions += "-language:experimental.macros",
-      libraryDependencies ++= Seq(
-        // "org.scala-lang" % "scala-reflect" % scalaVersion.value,
-        // "org.scala-lang" % "scala-library" % scalaVersion.value,
-        "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided"))
+      libraryDependencies += Dep.ScalaCompiler.value % Provided)
 
   def utestSettings = ConfigureBoth(
     _.settings(
-      libraryDependencies += "com.lihaoyi" %%% "utest" % Ver.MTest % "test",
+      libraryDependencies += Dep.MTest.value % Test,
       testFrameworks      += new TestFramework("utest.runner.Framework")))
     .jsConfigure(
       _.settings(jsEnv in Test := new JSDOMNodeJSEnv))
@@ -95,8 +84,9 @@ object UnivEqBuild {
     .bothConfigure(definesMacros)
     .settings(
       moduleName := "univeq",
-      libraryDependencies += "org.scala-lang.modules" %%% "scala-collection-compat" % Ver.ScalaCollCompat)
-    .jsSettings(libraryDependencies += "org.scala-js" %%% "scalajs-dom" % Ver.ScalaJsDom)
+      libraryDependencies += Dep.ScalaCollCompat.value)
+    .jsSettings(
+      libraryDependencies += Dep.ScalaJsDom.value)
 
   lazy val scalazJVM = scalaz.jvm
   lazy val scalazJS  = scalaz.js
@@ -107,7 +97,7 @@ object UnivEqBuild {
     .configureCross(utestSettings)
     .settings(
       moduleName          := "univeq-scalaz",
-      libraryDependencies += "org.scalaz" %%% "scalaz-core" % Ver.Scalaz)
+      libraryDependencies += Dep.Scalaz.value)
 
   lazy val catsJVM = cats.jvm
   lazy val catsJS  = cats.js
@@ -118,5 +108,5 @@ object UnivEqBuild {
     .configureCross(utestSettings)
     .settings(
       moduleName          := "univeq-cats",
-      libraryDependencies += "org.typelevel" %%% "cats-core" % Ver.Cats)
+      libraryDependencies += Dep.Cats.value)
 }
