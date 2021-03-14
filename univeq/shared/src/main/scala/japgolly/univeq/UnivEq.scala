@@ -7,7 +7,7 @@ import java.{util => ju}
 /**
  * Universal equality.
  */
-trait UnivEq[@specialized A] {
+sealed abstract class UnivEq[@specialized A] {
   @inline final def univEq(a: A, b: A): Boolean =
     a == b
 }

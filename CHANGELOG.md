@@ -1,5 +1,7 @@
-# 1.4.0
+# 1.4.0-RC1
 
+* `UnivEq` is now longer a trait that you can extend yourself.
+  It is now sealed in Scala 2, and will be an erased class in Scala 3.
 * Upgrade deps
 
 # 1.3.0
