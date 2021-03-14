@@ -7,8 +7,8 @@ import java.{util => ju}
 /**
  * Universal equality.
  */
-sealed abstract class UnivEq[@specialized A] {
-  @inline final def univEq(a: A, b: A): Boolean =
+final class UnivEq[@specialized A] private[univeq]() {
+  @inline def univEq(a: A, b: A): Boolean =
     a == b
 }
 
@@ -18,7 +18,7 @@ object UnivEq extends ScalaUnivEq with PlatformUnivEq {
     proof
 
   final val UnivEqAnyRef: UnivEq[AnyRef] =
-    new UnivEq[AnyRef] {}
+    new UnivEq[AnyRef]
 
   def force[A]: UnivEq[A] =
     UnivEqAnyRef.asInstanceOf[UnivEq[A]]
@@ -26,15 +26,15 @@ object UnivEq extends ScalaUnivEq with PlatformUnivEq {
   @inline implicit def univEqNothing: UnivEq[Nothing] = force
 
   // Primitives & core
-  implicit val UnivEqBoolean: UnivEq[Boolean] = new UnivEq[Boolean]{}
-  implicit def UnivEqByte   : UnivEq[Byte   ] = new UnivEq[Byte   ]{}
-  implicit val UnivEqChar   : UnivEq[Char   ] = new UnivEq[Char   ]{}
-  implicit val UnivEqDouble : UnivEq[Double ] = new UnivEq[Double ]{}
-  implicit def UnivEqFloat  : UnivEq[Float  ] = new UnivEq[Float  ]{}
-  implicit val UnivEqInt    : UnivEq[Int    ] = new UnivEq[Int    ]{}
-  implicit val UnivEqLong   : UnivEq[Long   ] = new UnivEq[Long   ]{}
-  implicit def UnivEqShort  : UnivEq[Short  ] = new UnivEq[Short  ]{}
-  implicit val UnivEqUnit   : UnivEq[Unit   ] = new UnivEq[Unit   ]{}
+  implicit val UnivEqBoolean: UnivEq[Boolean] = new UnivEq[Boolean]
+  implicit def UnivEqByte   : UnivEq[Byte   ] = new UnivEq[Byte   ]
+  implicit val UnivEqChar   : UnivEq[Char   ] = new UnivEq[Char   ]
+  implicit val UnivEqDouble : UnivEq[Double ] = new UnivEq[Double ]
+  implicit def UnivEqFloat  : UnivEq[Float  ] = new UnivEq[Float  ]
+  implicit val UnivEqInt    : UnivEq[Int    ] = new UnivEq[Int    ]
+  implicit val UnivEqLong   : UnivEq[Long   ] = new UnivEq[Long   ]
+  implicit def UnivEqShort  : UnivEq[Short  ] = new UnivEq[Short  ]
+  implicit val UnivEqUnit   : UnivEq[Unit   ] = new UnivEq[Unit   ]
   @inline implicit def univEqString: UnivEq[String] = force
 
   // Tuples
