@@ -12,26 +12,21 @@ object Lib {
   def byScalaVersion[A](f: PartialFunction[(Long, Long), Seq[A]]): Def.Initialize[Seq[A]] =
     Def.setting(CrossVersion.partialVersion(scalaVersion.value).flatMap(f.lift).getOrElse(Nil))
 
+  private def extraCrossProjectScalaDirs(k: ConfigKey): Def.Initialize[Seq[File]] = Def.setting {
+    val srcBase = (sourceDirectory in k).value
+    val stage   = srcBase.getName()
+    val shared  = srcBase.getParentFile().getParentFile().getParentFile() / "shared" / "src" / stage
+    CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((2, _))  => Seq(shared / "scala-2")
+      case Some((3, _))  => Seq(shared / "scala-3")
+      case _             => Nil
+    }
+  }
+
   def crossProjectScalaDirs: CPE =
     _.settings(
-      unmanagedSourceDirectories in Compile ++= {
-        val root   = (baseDirectory in Compile).value / ".."
-        val shared = root / "shared" / "src" / "main"
-        CrossVersion.partialVersion(scalaVersion.value) match {
-          case Some((2, _))  => Seq(shared / "scala-2")
-          case Some((3, _))  => Seq(shared / "scala-3")
-          case _             => Nil
-        }
-      },
-      unmanagedSourceDirectories in Test ++= {
-        val root   = (baseDirectory in Test).value / ".."
-        val shared = root / "shared" / "src" / "test"
-        CrossVersion.partialVersion(scalaVersion.value) match {
-          case Some((2, _))  => Seq(shared / "scala-2")
-          case Some((3, _))  => Seq(shared / "scala-3")
-          case _             => Nil
-        }
-      }
+      unmanagedSourceDirectories in Compile ++= extraCrossProjectScalaDirs(Compile).value,
+      unmanagedSourceDirectories in Test    ++= extraCrossProjectScalaDirs(Test).value,
     )
 
   class ConfigureBoth(val jvm: PE, val js: PE) {
