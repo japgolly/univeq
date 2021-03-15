@@ -56,7 +56,7 @@ object UnivEqBuild {
                                          case (2, _) => scalac2Flags
                                          case (3, _) => scalac3Flags
                                        }.value,
-      scalacOptions in Test        --= Seq("-Ywarn-dead-code"),
+      scalacOptions in Test        --= Seq("-new-syntax", "-Ywarn-dead-code"),
       shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
       testFrameworks                := Nil,
       incOptions                    := incOptions.value,

@@ -35,7 +35,7 @@ object DerivationTest {
 
   // Poly, 1 arg
   case class CC_A[A](a: A)
-      derive[CC_A[Int]]
+  derive[CC_A[Int]]
   NO("derive[CC_A[NopeI]]")
 
   // ADT - ok
