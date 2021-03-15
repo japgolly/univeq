@@ -121,9 +121,9 @@ object UnivEq extends PlatformUnivEq:
   // ===================================================================================================================
   // Derivation
 
-  inline def derived    [A]: UnivEq[A] = internal.Derive[A]
-  inline def derive     [A]: UnivEq[A] = internal.Derive[A]
-  inline def deriveDebug[A]: UnivEq[A] = internal.Derive.debug[A]
+  inline def derived    [A]: UnivEq[A] = internal.Derivation[A]
+  inline def derive     [A]: UnivEq[A] = internal.Derivation[A]
+  inline def deriveDebug[A]: UnivEq[A] = internal.Derivation.debug[A]
 
   @deprecated("No longer required in Scala 3. Use UnivEq.derived", "1.4.0")
   inline def deriveEmpty[A]: UnivEq[A] = derive[A]

@@ -5,7 +5,7 @@ import scala.collection.mutable
 import scala.deriving.*
 import scala.quoted.*
 
-object Derive:
+object Derivation:
 
   inline def apply[A]: UnivEq[A] =
     ${ macroImpl[A](false) }
