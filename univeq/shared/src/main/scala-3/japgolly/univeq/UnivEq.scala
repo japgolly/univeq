@@ -75,20 +75,15 @@ object UnivEq extends PlatformUnivEq:
   // ===================================================================================================================
   // Derivation
 
-  inline def derived     [A]: UnivEq[A] = internal.Derive[A]
-  inline def derivedDebug[A]: UnivEq[A] = internal.Derive.debug[A]
-
-  @deprecated("Use UnivEq.derived", "1.4.0")
-  inline def derive[A]: UnivEq[A] = derived[A]
-
-  @deprecated("Use UnivEq.derivedDebug", "1.4.0")
-  inline def deriveDebug[A]: UnivEq[A] = derivedDebug[A]
+  inline def derived    [A]: UnivEq[A] = internal.Derive[A]
+  inline def derive     [A]: UnivEq[A] = internal.Derive[A]
+  inline def deriveDebug[A]: UnivEq[A] = internal.Derive.debug[A]
 
   @deprecated("No longer required in Scala 3. Use UnivEq.derived", "1.4.0")
-  inline def deriveEmpty[A]: UnivEq[A] = derived[A]
+  inline def deriveEmpty[A]: UnivEq[A] = derive[A]
 
   @deprecated("No longer required in Scala 3. Use UnivEq.derivedDebug", "1.4.0")
-  inline def deriveEmptyDebug[A]: UnivEq[A] = derivedDebug[A]
+  inline def deriveEmptyDebug[A]: UnivEq[A] = deriveDebug[A]
 
 //   inline def deriveFix     [Fix[_[_]], F[_]]: UnivEq[Fix[F]] = macro macros.UnivEqMacros.deriveFixQuiet[Fix, F]
 //   inline def deriveFixDebug[Fix[_[_]], F[_]]: UnivEq[Fix[F]] = macro macros.UnivEqMacros.deriveFixDebug[Fix, F]
