@@ -37,7 +37,9 @@ object UnivEqBuild {
   )
 
   def scalac3Flags = Seq(
-    "-source", "3.0-migration",
+    "-new-syntax",
+    "-Yerased-terms",
+    "-Yindent-colons",
   )
 
   val commonSettings = ConfigureBoth(
