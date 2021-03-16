@@ -35,7 +35,7 @@ object DerivationTest {
 
   // Poly, 1 arg
   case class CC_A[A](a: A)
-      derive[CC_A[Int]]
+  derive[CC_A[Int]]
   NO("derive[CC_A[NopeI]]")
 
   // ADT - ok
@@ -54,12 +54,13 @@ object DerivationTest {
     NO("derive[Blah]")
   }
 
-  object Xxx {
-    sealed abstract class Elem[+T, +S]
-    sealed abstract class Flow[+S] extends Elem[Nothing, S]
-    case class T[+T](t: T)         extends Elem[T, Nothing]
-    case class S[+S](s: S)         extends Flow[S]
-    case class I(i: Int)           extends Flow[Nothing]
-    def univEq[TT: UnivEq, SS: UnivEq]: UnivEq[Elem[TT, SS]] = UnivEq.derive
-  }
+  // TODO Re-enable after https://github.com/lampepfl/dotty/issues/11765
+  // object Xxx {
+  //   sealed abstract class Elem[+T, +S]
+  //   sealed abstract class Flow[+S] extends Elem[Nothing, S]
+  //   case class T[+T](t: T)         extends Elem[T, Nothing]
+  //   case class S[+S](s: S)         extends Flow[S]
+  //   case class I(i: Int)           extends Flow[Nothing]
+  //   def univEq[TT: UnivEq, SS: UnivEq]: UnivEq[Elem[TT, SS]] = UnivEq.derive
+  // }
 }

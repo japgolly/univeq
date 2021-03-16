@@ -3,25 +3,21 @@ language: scala
 scala:
   - 2.12.13
   - 2.13.5
+  - 3.0.0-RC1
 
 jdk:
   - openjdk8
 
 install:
   - . $HOME/.nvm/nvm.sh
-  - nvm install 12
-  - nvm use 12
+  - nvm install stable
+  - nvm use stable
   - export NODE_PATH="$(npm config get prefix)"/lib/node_modules
   - npm install
   - npm install jsdom source-map-support
 
-env:
-  - TARGET=JVM PRE=test:compile
-  - TARGET=JS  PRE=test:fastOptJS
-
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/$PRE
-  - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/test
+  - sbt ++$TRAVIS_SCALA_VERSION test
 
 before_cache:
   - rm -f $HOME/.ivy2/.sbt.ivy.lock

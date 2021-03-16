@@ -71,7 +71,7 @@ object RuntimeTest extends TestSuite {
 
     "force" - {
       def test[A](a: A, b: A): Unit = {
-        implicit def f = UnivEq.force[A]
+        implicit def f: UnivEq[A] = UnivEq.force[A]
         assert(a ==* a)
         assert(a !=* b)
       }
