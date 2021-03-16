@@ -39,6 +39,7 @@ object UnivEqBuild {
   def scalac3Flags = Seq(
     "-new-syntax",
     "-Yerased-terms",
+    "-Yexplicit-nulls",
     "-Yindent-colons",
   )
 
@@ -56,7 +57,7 @@ object UnivEqBuild {
                                          case (2, _) => scalac2Flags
                                          case (3, _) => scalac3Flags
                                        }.value,
-      scalacOptions in Test        --= Seq("-new-syntax", "-Ywarn-dead-code"),
+      scalacOptions in Test        --= Seq("-new-syntax", "-Yexplicit-nulls", "-Ywarn-dead-code"),
       shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
       testFrameworks                := Nil,
       incOptions                    := incOptions.value,

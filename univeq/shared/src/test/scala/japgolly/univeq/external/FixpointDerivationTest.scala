@@ -8,7 +8,10 @@ import utest.compileError
 object FixpointDerivationTest {
   type Fail = utest.CompileError
 
-  final case class FixCC[F[_]](unfix: F[FixCC[F]])
+  final case class FixCC[F[_]](unfix: F[FixCC[F]]) {
+    type X = Int
+    type G[A] = List[A]
+  }
   object FixCC {
     def ok[F[_]](implicit ev: UnivEq[F[Unit]]): UnivEq[FixCC[F]] = derive[FixCC[F]]
     def ko[F[_]]: Fail = compileError("derive[FixCC[F]]")

@@ -7,21 +7,21 @@ import scala.quoted.*
 
 object Derivation:
 
-  inline def apply[A]: UnivEq[A] =
+  inline def derive[A]: UnivEq[A] =
     ${ macroImpl[A](false) }
 
-  inline def debug[A]: UnivEq[A] =
+  inline def deriveDebug[A]: UnivEq[A] =
     ${ macroImpl[A](true) }
 
   private def macroImpl[A](debug: Boolean)(using Quotes, Type[A]): Expr[UnivEq[A]] =
     def log(msg: => Any) = if debug then println(msg)
     log("="*120)
     log(s"Beginning derivation of UnivEq[${Type.show[A]}]")
-    val seen = mutable.Set.empty[Type[_]]
+    val seen = mutable.Set.empty[Type[?]]
     var failed = false
-    var causes = List.empty[Type[_]]
+    var causes = List.empty[Type[?]]
 
-    def go[B: Type]: Unit =
+    def go[B: Type](fieldParent: Type[?] | Null): Unit =
       val B = Type.of[B]
       log("  - Checking: " + Type.show[B])
 
@@ -39,8 +39,8 @@ object Derivation:
         case '[h *: t] =>
           log(s"    Splitting tuple...")
           // log(s"    Splitting tuple: ${Type.show[h]} *: ${Type.show[t]}")
-          go[h]
-          go[t]
+          go[h](fieldParent)
+          go[t](fieldParent)
           return
         case '[EmptyTuple] =>
           // log(s"  - EmptyTuple")
@@ -52,13 +52,35 @@ object Derivation:
       Expr.summon[Mirror.Of[B]] match
         case Some('{ $m: Mirror.ProductOf[B] { type MirroredElemTypes = types } }) =>
           log("    Product-type mirror found. Checking fields...")
-          go[types]
+          go[types](B)
           return
         case Some('{ $m: Mirror.SumOf[B] { type MirroredElemTypes = types } }) =>
           log("    Sum-type mirror found. Checking cases...")
-          go[types]
+          go[types](null)
           return
         case _ =>
+
+      // Check 5: Is fixpoint of self?
+      if fieldParent != null then
+        import quotes.reflect._
+        val P = TypeRepr.of(using fieldParent).dealias
+        val b = TypeRepr.of[B].dealias
+        b match
+          case AppliedType(f@ TypeRef(NoPrefix(), _), `P` :: Nil) =>
+            P match
+              case AppliedType(_, parentTypeArgs) if parentTypeArgs.contains(f) =>
+                // We've found B[P[B]]
+                log(s"    Found fixpoint, looking for a UnivEq[${f.name}[Unit]]...")
+                val fUnit = f.appliedTo(TypeRepr.of[Unit])
+                log("  - Checking: " + Type.show(using fUnit.asType))
+                val univeqFUnit = TypeRepr.of[UnivEq].appliedTo(fUnit)
+                val UniveqFUnit = univeqFUnit.asType.asInstanceOf[Type[Any]]
+                log("  - Checking: " + Type.show(using UniveqFUnit))
+                if Expr.summon(using UniveqFUnit).isDefined then
+                  log("      ok: found given")
+                  return
+              case _ =>
+          case _ =>
 
       // Give up
       log("      DERIVATION FAILED")
