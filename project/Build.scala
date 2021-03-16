@@ -109,7 +109,7 @@ object UnivEqBuild {
   lazy val scalazJS  = scalaz.js
   lazy val scalaz = crossProject(JSPlatform, JVMPlatform)
     .in(file("univeq-scalaz"))
-    .configureCross(commonSettings, publicationSettings)
+    .configureCross(commonSettings, crossProjectScalaDirs, publicationSettings)
     .dependsOn(univEq)
     .configureCross(utestSettings)
     .settings(
@@ -120,7 +120,7 @@ object UnivEqBuild {
   lazy val catsJS  = cats.js
   lazy val cats = crossProject(JSPlatform, JVMPlatform)
     .in(file("univeq-cats"))
-    .configureCross(commonSettings, publicationSettings)
+    .configureCross(commonSettings, crossProjectScalaDirs, publicationSettings)
     .dependsOn(univEq)
     .configureCross(utestSettings)
     .settings(
