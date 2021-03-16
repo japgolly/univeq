@@ -49,8 +49,7 @@ object UnivEqBuild {
       homepage                      := Some(url("https://github.com/japgolly/" + ghProject)),
       licenses                      += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
       startYear                     := Some(2015),
-      // scalaVersion                  := Ver.Scala213,
-      scalaVersion                  := Ver.Scala3,
+      scalaVersion                  := Ver.Scala213,
       crossScalaVersions            := Seq(Ver.Scala212, Ver.Scala213, Ver.Scala3),
       scalacOptions                ++= scalacCommonFlags,
       scalacOptions                ++= byScalaVersion {

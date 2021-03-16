@@ -71,12 +71,11 @@ object Derivation:
             P match
               case AppliedType(_, parentTypeArgs) if parentTypeArgs.contains(f) =>
                 // We've found B[P[B]]
-                log(s"    Found fixpoint, looking for a UnivEq[${f.name}[Unit]]...")
                 val fUnit = f.appliedTo(TypeRepr.of[Unit])
-                log("  - Checking: " + Type.show(using fUnit.asType))
                 val univeqFUnit = TypeRepr.of[UnivEq].appliedTo(fUnit)
                 val UniveqFUnit = univeqFUnit.asType.asInstanceOf[Type[Any]]
-                log("  - Checking: " + Type.show(using UniveqFUnit))
+                log(s"    Found fixpoint, looking for a UnivEq[${f.name}[Unit]]...")
+                log("  - Checking: " + Type.show(using fUnit.asType))
                 if Expr.summon(using UniveqFUnit).isDefined then
                   log("      ok: found given")
                   return
