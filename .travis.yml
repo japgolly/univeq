@@ -16,13 +16,8 @@ install:
   - npm install
   - npm install jsdom source-map-support
 
-env:
-  - TARGET=JVM PRE=test:compile
-  - TARGET=JS  PRE=test:fastOptJS
-
 script:
-  - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/$PRE
-  - sbt ++$TRAVIS_SCALA_VERSION ${TARGET}/test
+  - sbt ++$TRAVIS_SCALA_VERSION test
 
 before_cache:
   - rm -f $HOME/.ivy2/.sbt.ivy.lock
