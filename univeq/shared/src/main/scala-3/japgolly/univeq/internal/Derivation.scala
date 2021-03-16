@@ -59,6 +59,7 @@ object Derivation:
           go[types](null)
           return
         case _ =>
+          // log(s"    No mirror found for ${Type.show[B]}")
 
       // Check 5: Is fixpoint of self?
       if fieldParent != null then
