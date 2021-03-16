@@ -5,6 +5,7 @@ import dotty.tools.sbtplugin.DottyPlugin.autoImport._
 import sbtcrossproject.CrossProject
 import sbtcrossproject.CrossPlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
+import xerial.sbt.Sonatype.autoImport._
 
 object Lib {
   type CPE = CrossProject => CrossProject
@@ -55,13 +56,7 @@ object Lib {
 
   def publicationSettings(ghProject: String) = ConfigureBoth(
     _.settings(
-      publishTo := {
-        val nexus = "https://oss.sonatype.org/"
-        if (isSnapshot.value)
-          Some("snapshots" at nexus + "content/repositories/snapshots")
-        else
-          Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-      },
+      publishTo := sonatypePublishToBundle.value,
       pomExtra :=
         <scm>
           <connection>scm:git:github.com/japgolly/{ghProject}</connection>
