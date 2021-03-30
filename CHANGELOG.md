@@ -1,6 +1,6 @@
 # 1.4.0-RC1
 
-* `UnivEq` is now a `final class` instead of a trait that you can extend yourself.
+* `UnivEq` is now a `final class` instead of a trait
 * Scala 3 support
 * Upgrade deps
 
