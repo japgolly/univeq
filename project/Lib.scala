@@ -15,7 +15,7 @@ object Lib {
     Def.setting(CrossVersion.partialVersion(scalaVersion.value).flatMap(f.lift).getOrElse(Nil))
 
   private def extraCrossProjectScalaDirs(k: ConfigKey): Def.Initialize[Seq[File]] = Def.setting {
-    val srcBase = (sourceDirectory in k).value
+    val srcBase = (k / sourceDirectory).value
     val stage   = srcBase.getName()
     val shared  = srcBase.getParentFile().getParentFile().getParentFile() / "shared" / "src" / stage
     CrossVersion.partialVersion(scalaVersion.value) match {
@@ -27,8 +27,8 @@ object Lib {
 
   def crossProjectScalaDirs: CPE =
     _.settings(
-      unmanagedSourceDirectories in Compile ++= extraCrossProjectScalaDirs(Compile).value,
-      unmanagedSourceDirectories in Test    ++= extraCrossProjectScalaDirs(Test).value,
+      Compile / unmanagedSourceDirectories ++= extraCrossProjectScalaDirs(Compile).value,
+      Test / unmanagedSourceDirectories    ++= extraCrossProjectScalaDirs(Test).value,
     )
 
   class ConfigureBoth(val jvm: PE, val js: PE) {
@@ -91,7 +91,7 @@ object Lib {
 
   def preventPublication: PE =
     _.settings(
-      skip in publish    := true,
+      publish / skip     := true,
       publish            := {},
       publishLocal       := {},
       publishSigned      := {},

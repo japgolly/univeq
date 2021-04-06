@@ -45,10 +45,6 @@ object UnivEqBuild {
 
   val commonSettings = ConfigureBoth(
     _.settings(
-      organization                  := "com.github.japgolly.univeq",
-      homepage                      := Some(url("https://github.com/japgolly/" + ghProject)),
-      licenses                      += ("Apache-2.0", url("http://opensource.org/licenses/Apache-2.0")),
-      startYear                     := Some(2015),
       scalaVersion                  := Ver.Scala213,
       crossScalaVersions            := Seq(Ver.Scala212, Ver.Scala213, Ver.Scala3),
       scalacOptions                ++= scalacCommonFlags,
@@ -56,13 +52,12 @@ object UnivEqBuild {
                                          case (2, _) => scalac2Flags
                                          case (3, _) => scalac3Flags
                                        }.value,
-      scalacOptions in Test        --= Seq("-new-syntax", "-Yexplicit-nulls", "-Ywarn-dead-code"),
-      shellPrompt in ThisBuild      := ((s: State) => Project.extract(s).currentRef.project + "> "),
+      Test / scalacOptions         --= Seq("-new-syntax", "-Yexplicit-nulls", "-Ywarn-dead-code"),
       testFrameworks                := Nil,
       incOptions                    := incOptions.value,
       updateOptions                 := updateOptions.value.withCachedResolution(true),
       releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-      releaseTagComment             := s"v${(version in ThisBuild).value}",
+      releaseTagComment             := s"v${(ThisBuild / version).value}",
       releaseVcsSign                := true))
 
   def definesMacros: Project => Project =
@@ -76,7 +71,7 @@ object UnivEqBuild {
       libraryDependencies += Dep.MTest.value % Test,
       testFrameworks      += new TestFramework("utest.runner.Framework")))
     .jsConfigure(
-      _.settings(jsEnv in Test := new JSDOMNodeJSEnv))
+      _.settings(Test / jsEnv := new JSDOMNodeJSEnv))
 
   lazy val root =
     Project("root", file("."))
