@@ -1,6 +1,5 @@
 import sbt._
 import sbt.Keys._
-import dotty.tools.sbtplugin.DottyPlugin.autoImport._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Dependencies {
@@ -25,8 +24,8 @@ object Dependencies {
     val MTest           = Def.setting("com.lihaoyi"                   %%% "utest"                   % Ver.MTest)
     val ScalaCollCompat = Def.setting("org.scala-lang.modules"        %%% "scala-collection-compat" % Ver.ScalaCollCompat)
     val ScalaCompiler   = Def.setting("org.scala-lang"                  % "scala-compiler"          % scalaVersion.value)
-    val ScalaJsDom      = Def.setting("org.scala-js"                  %%% "scalajs-dom"             % Ver.ScalaJsDom withDottyCompat scalaVersion.value)
-    val Scalaz          = Def.setting("org.scalaz"                    %%% "scalaz-core"             % Ver.Scalaz withDottyCompat scalaVersion.value)
+    val ScalaJsDom      = Def.setting("org.scala-js"                  %%% "scalajs-dom"             % Ver.ScalaJsDom cross CrossVersion.for3Use2_13)
+    val Scalaz          = Def.setting("org.scalaz"                    %%% "scalaz-core"             % Ver.Scalaz cross CrossVersion.for3Use2_13)
   }
 
 }

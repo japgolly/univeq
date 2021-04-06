@@ -1,7 +1,6 @@
 import sbt._
 import sbt.Keys._
 import com.jsuereth.sbtpgp.PgpKeys
-import dotty.tools.sbtplugin.DottyPlugin.autoImport._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
@@ -62,8 +61,8 @@ object UnivEqBuild {
 
   def definesMacros: Project => Project =
     _.settings(
-      scalacOptions       ++= (if (isDotty.value) Nil else Seq("-language:experimental.macros")),
-      libraryDependencies ++= (if (isDotty.value) Nil else Seq(Dep.ScalaCompiler.value % Provided)),
+      scalacOptions       ++= (if (scalaVersion.value startsWith "3") Nil else Seq("-language:experimental.macros")),
+      libraryDependencies ++= (if (scalaVersion.value startsWith "3") Nil else Seq(Dep.ScalaCompiler.value % Provided)),
     )
 
   def utestSettings = ConfigureBoth(
