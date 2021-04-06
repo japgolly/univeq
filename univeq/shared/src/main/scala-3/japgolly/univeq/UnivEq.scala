@@ -10,8 +10,8 @@ import java.{util => ju}
  * Universal equality.
  */
 final class UnivEq[A]:
-  inline def univEq(a: A, b: A): Boolean =
-    a == b
+  transparent inline def univEq(a: A, b: A): Boolean =
+    a.==*(b)(using this)
 
 object UnivEq extends PlatformUnivEq, ScalaUnivEq:
 
@@ -42,7 +42,6 @@ object UnivEq extends PlatformUnivEq, ScalaUnivEq:
   // Tuples
   inline given univEqEmptyTuple                               : UnivEq[EmptyTuple] = force
   inline given univEqTuple     [H: UnivEq, T <: Tuple: UnivEq]: UnivEq[H *: T    ] = force
-
 
   // Java
   inline given univEqClass  [A]            : UnivEq[Class  [A]] = force
@@ -87,11 +86,11 @@ object UnivEq extends PlatformUnivEq, ScalaUnivEq:
   inline def deriveEmptyDebug[A]: UnivEq[A] = deriveDebug[A]
 
   inline def deriveFix[Fix[_[_]], F[_]]: UnivEq[Fix[F]] =
-    erased val _ = derive[F[Unit]]
+    def unused = derive[F[Unit]]
     force
 
   inline def deriveFixDebug[Fix[_[_]], F[_]]: UnivEq[Fix[F]] =
-    erased val _ = deriveDebug[F[Unit]]
+    def unused = deriveDebug[F[Unit]]
     force
 
   object AutoDerive:
