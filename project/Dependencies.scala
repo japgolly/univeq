@@ -7,16 +7,16 @@ object Dependencies {
   object Ver {
 
     // Exported
-    val Cats            = "2.5.0"
+    val Cats            = "2.6.0"
     val Scala212        = "2.12.13"
     val Scala213        = "2.13.5"
-    val Scala3          = "3.0.0-RC2"
+    val Scala3          = "3.0.0-RC3"
     val ScalaCollCompat = "2.4.3"
     val ScalaJsDom      = "1.1.0"
     val Scalaz          = "7.2.31"
 
     // Internal
-    val MTest           = "0.7.8"
+    val MTest           = "0.7.9"
   }
 
   object Dep {

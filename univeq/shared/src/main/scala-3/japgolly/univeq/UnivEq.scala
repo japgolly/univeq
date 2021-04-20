@@ -21,7 +21,7 @@ object UnivEq extends PlatformUnivEq, ScalaUnivEq:
   def force[A]: UnivEq[A] =
     singleton.asInstanceOf[UnivEq[A]]
 
-  inline def apply[A](using proof: UnivEq[A]): UnivEq[A] =
+  inline def apply[A](using inline proof: UnivEq[A]): UnivEq[A] =
     proof
 
   // TODO Rename all UnivEq.{[uU]nivEqXxx => xxx} givens
