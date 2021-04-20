@@ -1,7 +1,9 @@
 package japgolly.univeq
 
+import scala.annotation.nowarn
 import utest._
 
+@nowarn("msg=will always yield")
 object RuntimeTest extends TestSuite {
 
   def assertExists[A: UnivEq]: Unit =

@@ -24,7 +24,7 @@ end UnivEqOpsInlineHacks
 
 extension [A](a: A)
 
-  transparent inline def ==*[B >: A](b: B)(using ev: => UnivEq[B]): Boolean =
+  inline def ==*[B >: A](b: B)(using inline ev: UnivEq[B]): Boolean =
     inline erasedValue[B] match
       case _: Byte    => UnivEqOpsInlineHacks.eq_Byte   (a.asInstanceOf[Byte   ], b.asInstanceOf[Byte   ])
       case _: Char    => UnivEqOpsInlineHacks.eq_Char   (a.asInstanceOf[Char   ], b.asInstanceOf[Char   ])
@@ -37,7 +37,7 @@ extension [A](a: A)
       case _: Unit    => true
       case _          => a == b
 
-  transparent inline def !=*[B >: A](b: B)(using ev: => UnivEq[B]): Boolean =
+  inline def !=*[B >: A](b: B)(using inline ev: UnivEq[B]): Boolean =
     inline erasedValue[B] match
       case _: Byte    => UnivEqOpsInlineHacks.ne_Byte   (a.asInstanceOf[Byte   ], b.asInstanceOf[Byte   ])
       case _: Char    => UnivEqOpsInlineHacks.ne_Char   (a.asInstanceOf[Char   ], b.asInstanceOf[Char   ])

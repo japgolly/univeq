@@ -10,7 +10,7 @@ import java.{util => ju}
  * Universal equality.
  */
 final class UnivEq[A]:
-  transparent inline def univEq(a: A, b: A): Boolean =
+  inline def univEq(a: A, b: A): Boolean =
     a.==*(b)(using this)
 
 object UnivEq extends PlatformUnivEq, ScalaUnivEq:
