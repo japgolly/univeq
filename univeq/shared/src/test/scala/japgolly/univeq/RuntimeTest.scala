@@ -1,7 +1,9 @@
 package japgolly.univeq
 
+import scala.annotation.nowarn
 import utest._
 
+@nowarn("msg=will always yield")
 object RuntimeTest extends TestSuite {
 
   def assertExists[A: UnivEq]: Unit =
@@ -75,9 +77,21 @@ object RuntimeTest extends TestSuite {
         assert(a ==* a)
         assert(a !=* b)
       }
-      "anyref" - test(I(1), I(2))
-      "int"    - test(1, 2)
-      "bool"   - test(true, false)
+      "Byte"    - test[Byte   ](1, 2)
+      "Char"    - test[Char   ](1, 2)
+      "Short"   - test[Short  ](1, 2)
+      "Int"     - test[Int    ](1, 2)
+      "Long"    - test[Long   ](1, 2)
+      "Float"   - test[Float  ](1, 2)
+      "Double"  - test[Double ](1, 2)
+      "Boolean" - test[Boolean](true, false)
+      "String"  - test[String ]("1", "2")
+      "CC"      - test(I(1), I(2))
+      "Unit"    - {
+        val u = ()
+        assert(u ==* u)
+        assert(!(u !=* u))
+      }
     }
   }
 }

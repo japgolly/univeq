@@ -1,6 +1,7 @@
-# 1.4.0-RC1
+# 1.4.0
 
 * `UnivEq` is now a `final class` instead of a trait
+* Optimise `==*` and `!=*` methods (to avoid boxing and drop the `UnivEq` evidence)
 * Scala 3 support
 * Upgrade deps
 

@@ -1,7 +1,6 @@
 import sbt._
 import sbt.Keys._
 import com.jsuereth.sbtpgp.PgpKeys
-import dotty.tools.sbtplugin.DottyPlugin.autoImport._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
@@ -38,14 +37,13 @@ object UnivEqBuild {
 
   def scalac3Flags = Seq(
     "-new-syntax",
-    "-Yerased-terms",
     "-Yexplicit-nulls",
     "-Yindent-colons",
   )
 
   val commonSettings = ConfigureBoth(
     _.settings(
-      scalaVersion                  := Ver.Scala213,
+      scalaVersion                  := Ver.Scala3,
       crossScalaVersions            := Seq(Ver.Scala212, Ver.Scala213, Ver.Scala3),
       scalacOptions                ++= scalacCommonFlags,
       scalacOptions                ++= byScalaVersion {
@@ -62,8 +60,8 @@ object UnivEqBuild {
 
   def definesMacros: Project => Project =
     _.settings(
-      scalacOptions       ++= (if (isDotty.value) Nil else Seq("-language:experimental.macros")),
-      libraryDependencies ++= (if (isDotty.value) Nil else Seq(Dep.ScalaCompiler.value % Provided)),
+      scalacOptions       ++= (if (scalaVersion.value startsWith "3") Nil else Seq("-language:experimental.macros")),
+      libraryDependencies ++= (if (scalaVersion.value startsWith "3") Nil else Seq(Dep.ScalaCompiler.value % Provided)),
     )
 
   def utestSettings = ConfigureBoth(
@@ -97,6 +95,18 @@ object UnivEqBuild {
     .settings(
       moduleName := "univeq",
       libraryDependencies += Dep.ScalaCollCompat.value)
+    .jvmSettings(
+      Test / fork        := true,
+      Test / javaOptions += ("-Dclasses.dir=" + (Test / classDirectory).value.absolutePath),
+      Test / unmanagedResourceDirectories ++= {
+        val base = (Test / resourceDirectory).value.absolutePath
+        CrossVersion.partialVersion(scalaVersion.value) match {
+          case Some((2, n))  => Seq(file(base + "-2." + n))
+          case Some((3, _))  => Seq(file(base + "-3"))
+          case _             => Nil
+        }
+      }
+    )
     .jsSettings(
       libraryDependencies += Dep.ScalaJsDom.value)
 

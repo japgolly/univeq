@@ -1,0 +1,182 @@
+Compiled from "BytecodeTest.scala"
+public class japgolly.univeq.BytecodeTest$TestSubject {
+  public boolean testByte(byte);
+    Code:
+       0: iload_1
+       1: iload_1
+       2: if_icmpeq     9
+       5: iconst_1
+       6: goto          10
+       9: iconst_0
+      10: ifne          26
+      13: iload_1
+      14: iload_1
+      15: if_icmpne     22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ifeq          28
+      26: iconst_1
+      27: ireturn
+      28: iconst_0
+      29: ireturn
+
+  public boolean testChar(char);
+    Code:
+       0: iload_1
+       1: iload_1
+       2: if_icmpeq     9
+       5: iconst_1
+       6: goto          10
+       9: iconst_0
+      10: ifne          26
+      13: iload_1
+      14: iload_1
+      15: if_icmpne     22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ifeq          28
+      26: iconst_1
+      27: ireturn
+      28: iconst_0
+      29: ireturn
+
+  public boolean testShort(short);
+    Code:
+       0: iload_1
+       1: iload_1
+       2: if_icmpeq     9
+       5: iconst_1
+       6: goto          10
+       9: iconst_0
+      10: ifne          26
+      13: iload_1
+      14: iload_1
+      15: if_icmpne     22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ifeq          28
+      26: iconst_1
+      27: ireturn
+      28: iconst_0
+      29: ireturn
+
+  public boolean testInt(int);
+    Code:
+       0: iload_1
+       1: iload_1
+       2: if_icmpeq     9
+       5: iconst_1
+       6: goto          10
+       9: iconst_0
+      10: ifne          26
+      13: iload_1
+      14: iload_1
+      15: if_icmpne     22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ifeq          28
+      26: iconst_1
+      27: ireturn
+      28: iconst_0
+      29: ireturn
+
+  public boolean testLong(long);
+    Code:
+       0: lload_1
+       1: lload_1
+       2: lcmp
+       3: ifeq          10
+       6: iconst_1
+       7: goto          11
+      10: iconst_0
+      11: ifne          28
+      14: lload_1
+      15: lload_1
+      16: lcmp
+      17: ifne          24
+      20: iconst_1
+      21: goto          25
+      24: iconst_0
+      25: ifeq          30
+      28: iconst_1
+      29: ireturn
+      30: iconst_0
+      31: ireturn
+
+  public boolean testFloat(float);
+    Code:
+       0: fload_1
+       1: fload_1
+       2: fcmpl
+       3: ifeq          10
+       6: iconst_1
+       7: goto          11
+      10: iconst_0
+      11: ifne          28
+      14: fload_1
+      15: fload_1
+      16: fcmpl
+      17: ifne          24
+      20: iconst_1
+      21: goto          25
+      24: iconst_0
+      25: ifeq          30
+      28: iconst_1
+      29: ireturn
+      30: iconst_0
+      31: ireturn
+
+  public boolean testDouble(double);
+    Code:
+       0: dload_1
+       1: dload_1
+       2: dcmpl
+       3: ifeq          10
+       6: iconst_1
+       7: goto          11
+      10: iconst_0
+      11: ifne          28
+      14: dload_1
+      15: dload_1
+      16: dcmpl
+      17: ifne          24
+      20: iconst_1
+      21: goto          25
+      24: iconst_0
+      25: ifeq          30
+      28: iconst_1
+      29: ireturn
+      30: iconst_0
+      31: ireturn
+
+  public boolean testBoolean(boolean);
+    Code:
+       0: iload_1
+       1: iload_1
+       2: if_icmpeq     9
+       5: iconst_1
+       6: goto          10
+       9: iconst_0
+      10: ifne          26
+      13: iload_1
+      14: iload_1
+      15: if_icmpne     22
+      18: iconst_1
+      19: goto          23
+      22: iconst_0
+      23: ifeq          28
+      26: iconst_1
+      27: ireturn
+      28: iconst_0
+      29: ireturn
+
+  public japgolly.univeq.BytecodeTest$TestSubject();
+    Code:
+       0: aload_0
+       1: invokespecial #39                 // Method java/lang/Object."<init>":()V
+       4: return
+}

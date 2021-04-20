@@ -1,6 +1,5 @@
 import sbt._
 import sbt.Keys._
-import dotty.tools.sbtplugin.DottyPlugin.autoImport._
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 
 object Dependencies {
@@ -8,16 +7,16 @@ object Dependencies {
   object Ver {
 
     // Exported
-    val Cats            = "2.5.0"
+    val Cats            = "2.6.0"
     val Scala212        = "2.12.13"
     val Scala213        = "2.13.5"
-    val Scala3          = "3.0.0-RC1"
-    val ScalaCollCompat = "2.4.2"
+    val Scala3          = "3.0.0-RC3"
+    val ScalaCollCompat = "2.4.3"
     val ScalaJsDom      = "1.1.0"
     val Scalaz          = "7.2.31"
 
     // Internal
-    val MTest           = "0.7.7"
+    val MTest           = "0.7.9"
   }
 
   object Dep {
@@ -25,8 +24,8 @@ object Dependencies {
     val MTest           = Def.setting("com.lihaoyi"                   %%% "utest"                   % Ver.MTest)
     val ScalaCollCompat = Def.setting("org.scala-lang.modules"        %%% "scala-collection-compat" % Ver.ScalaCollCompat)
     val ScalaCompiler   = Def.setting("org.scala-lang"                  % "scala-compiler"          % scalaVersion.value)
-    val ScalaJsDom      = Def.setting("org.scala-js"                  %%% "scalajs-dom"             % Ver.ScalaJsDom withDottyCompat scalaVersion.value)
-    val Scalaz          = Def.setting("org.scalaz"                    %%% "scalaz-core"             % Ver.Scalaz withDottyCompat scalaVersion.value)
+    val ScalaJsDom      = Def.setting("org.scala-js"                  %%% "scalajs-dom"             % Ver.ScalaJsDom cross CrossVersion.for3Use2_13)
+    val Scalaz          = Def.setting("org.scalaz"                    %%% "scalaz-core"             % Ver.Scalaz cross CrossVersion.for3Use2_13)
   }
 
 }
