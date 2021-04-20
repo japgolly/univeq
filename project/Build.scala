@@ -97,7 +97,16 @@ object UnivEqBuild {
       libraryDependencies += Dep.ScalaCollCompat.value)
     .jvmSettings(
       Test / fork        := true,
-      Test / javaOptions += ("-Dclasses.dir=" + (Test / classDirectory).value.absolutePath))
+      Test / javaOptions += ("-Dclasses.dir=" + (Test / classDirectory).value.absolutePath),
+      Test / unmanagedResourceDirectories ++= {
+        val base = (Test / resourceDirectory).value.absolutePath
+        CrossVersion.partialVersion(scalaVersion.value) match {
+          case Some((2, n))  => Seq(file(base + "-2." + n))
+          case Some((3, _))  => Seq(file(base + "-3"))
+          case _             => Nil
+        }
+      }
+    )
     .jsSettings(
       libraryDependencies += Dep.ScalaJsDom.value)
 

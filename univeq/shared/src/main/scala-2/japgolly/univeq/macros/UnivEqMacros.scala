@@ -9,6 +9,24 @@ final class UnivEqMacros(val c: Context) extends MacroUtils {
   val UnivEq = c.typeOf[UnivEq[_]]
   def Unit   = c.typeOf[Unit]
 
+  // ===================================================================================================================
+
+  def noBoxEq[B](b: c.Expr[B])(ev: c.Expr[UnivEq[B]])(implicit B: c.WeakTypeTag[B]): c.Expr[Boolean] = {
+    c.macroApplication match {
+      case q"$p1.$p2[$t1]($a).$f[$t2]($b2)($ev2)" =>
+        c.Expr[Boolean](q"$a == $b")
+    }
+  }
+
+  def noBoxNe[B](b: c.Expr[B])(ev: c.Expr[UnivEq[B]])(implicit B: c.WeakTypeTag[B]): c.Expr[Boolean] = {
+    c.macroApplication match {
+      case q"$p1.$p2[$t1]($a).$f[$t2]($b2)($ev2)" =>
+        c.Expr[Boolean](q"$a != $b")
+    }
+  }
+
+  // ===================================================================================================================
+
   def deriveFixQuiet[Fix[_[_]], F[_]]                (implicit Fix: c.WeakTypeTag[Fix[F]], F: c.WeakTypeTag[F[Unit]]): c.Expr[UnivEq[Fix[F]]] = deriveFix(false)
   def deriveFixDebug[Fix[_[_]], F[_]]                (implicit Fix: c.WeakTypeTag[Fix[F]], F: c.WeakTypeTag[F[Unit]]): c.Expr[UnivEq[Fix[F]]] = deriveFix(true )
   def deriveFix     [Fix[_[_]], F[_]](debug: Boolean)(implicit Fix: c.WeakTypeTag[Fix[F]], F: c.WeakTypeTag[F[Unit]]): c.Expr[UnivEq[Fix[F]]] = {
