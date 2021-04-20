@@ -95,6 +95,9 @@ object UnivEqBuild {
     .settings(
       moduleName := "univeq",
       libraryDependencies += Dep.ScalaCollCompat.value)
+    .jvmSettings(
+      Test / fork        := true,
+      Test / javaOptions += ("-Dclasses.dir=" + (Test / classDirectory).value.absolutePath))
     .jsSettings(
       libraryDependencies += Dep.ScalaJsDom.value)
 

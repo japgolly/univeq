@@ -1,28 +1,47 @@
 package japgolly.univeq
 
-class BytecodeTest {
-  def testByte   (a: Byte   ) = (a !=* a) || (a ==* a)
-  def testChar   (a: Char   ) = (a !=* a) || (a ==* a)
-  def testShort  (a: Short  ) = (a !=* a) || (a ==* a)
-  def testInt    (a: Int    ) = (a !=* a) || (a ==* a)
-  def testLong   (a: Long   ) = (a !=* a) || (a ==* a)
-  def testFloat  (a: Float  ) = (a !=* a) || (a ==* a)
-  def testDouble (a: Double ) = (a !=* a) || (a ==* a)
-  def testBoolean(a: Boolean) = (a !=* a) || (a ==* a)
-}
+import scala.sys.process._
+import utest.{assert => _, _}
 
-/*
-TODO: Add a bytecode test to sbt
+object BytecodeTest extends TestSuite {
 
-> javap -c univeq/jvm/target/scala-3*"/"test-classes/japgolly/univeq/BytecodeTest.class
+  class TestSubject {
+    def testByte   (a: Byte   ) = (a !=* a) || (a ==* a)
+    def testChar   (a: Char   ) = (a !=* a) || (a ==* a)
+    def testShort  (a: Short  ) = (a !=* a) || (a ==* a)
+    def testInt    (a: Int    ) = (a !=* a) || (a ==* a)
+    def testLong   (a: Long   ) = (a !=* a) || (a ==* a)
+    def testFloat  (a: Float  ) = (a !=* a) || (a ==* a)
+    def testDouble (a: Double ) = (a !=* a) || (a ==* a)
+    def testBoolean(a: Boolean) = (a !=* a) || (a ==* a)
+  }
 
-Compiled from "BytecodeTest.scala"
-public class japgolly.univeq.BytecodeTest {
-  public japgolly.univeq.BytecodeTest();
-    Code:
-       0: aload_0
-       1: invokespecial #9                  // Method java/lang/Object."<init>":()V
-       4: return
+  // Force class evaluation
+  private val testSubject = new TestSubject
+
+  private def classesDir = System.getProperty("classes.dir")
+
+  private lazy val actualDisassembly = {
+    val clsFile = s"$classesDir/japgolly/univeq/BytecodeTest$$TestSubject.class"
+    Seq("javap", "-c", clsFile).!!
+  }
+
+  private def methodBytecode(name: String, disassembly: String) =
+    disassembly
+      .linesIterator
+      .dropWhile(!_.matches(s"^  public \\S+ $name(?:\\(.*\\))?;$$"))
+      .takeWhile(_.trim.nonEmpty)
+      .mkString("\n")
+
+  private def testMethodBytecode(method: String): Unit = {
+    val actual = methodBytecode(method, actualDisassembly)
+    val expect = methodBytecode(method, expectedDisassembly)
+    // assert(actual == expect)
+    assert(actual == expect, s"Bytecode mismatch for $method()\n\n$actual\n ")
+  }
+
+  // > javap -c univeq/jvm/target/scala-3*/test-classes/japgolly/univeq/'BytecodeTest$TestSubject.class' >> univeq/jvm/src/test/scala/japgolly/univeq/BytecodeTest.scala
+  private def expectedDisassembly = """
 
   public boolean testByte(byte);
     Code:
@@ -262,4 +281,16 @@ public class japgolly.univeq.BytecodeTest {
       42: iconst_0
       43: ireturn
 }
-*/
+"""
+
+  override def tests = Tests {
+    "testByte"    - testMethodBytecode("testByte")
+    "testChar"    - testMethodBytecode("testChar")
+    "testShort"   - testMethodBytecode("testShort")
+    "testInt"     - testMethodBytecode("testInt")
+    "testLong"    - testMethodBytecode("testLong")
+    "testFloat"   - testMethodBytecode("testFloat")
+    "testDouble"  - testMethodBytecode("testDouble")
+    "testBoolean" - testMethodBytecode("testBoolean")
+  }
+}
