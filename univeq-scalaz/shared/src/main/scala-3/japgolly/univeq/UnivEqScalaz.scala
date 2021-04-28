@@ -5,16 +5,16 @@ import UnivEq.*
 
 trait UnivEqScalaz:
 
-  inline given scalazEqualFromUnivEq[A](using inline ev: UnivEq[A]): Equal[A] =
+  inline implicit def scalazEqualFromUnivEq[A](using inline ev: UnivEq[A]): Equal[A] =
     Equal.equalA
 
-  inline given univEqScalazDisj [A, B](using inline a: UnivEq[A], inline b: UnivEq[B]): UnivEq[A \/ B         ] = derive
-  inline given univEqScalazThese[A, B](using inline a: UnivEq[A], inline b: UnivEq[B]): UnivEq[A \&/ B        ] = force
-  inline given univEqScalazNel  [A]   (using inline a: UnivEq[A])                     : UnivEq[NonEmptyList[A]] = force
+  inline implicit def univEqScalazDisj [A, B](using inline a: UnivEq[A], inline b: UnivEq[B]): UnivEq[A \/ B         ] = derive
+  inline implicit def univEqScalazThese[A, B](using inline a: UnivEq[A], inline b: UnivEq[B]): UnivEq[A \&/ B        ] = force
+  inline implicit def univEqScalazNel  [A]   (using inline a: UnivEq[A])                     : UnivEq[NonEmptyList[A]] = force
 
-  inline given univEqScalazOneAnd[F[_], A](using inline fa: UnivEq[F[A]], inline a: UnivEq[A]): UnivEq[OneAnd[F, A]] = derive
+  inline implicit def univEqScalazOneAnd[F[_], A](using inline fa: UnivEq[F[A]], inline a: UnivEq[A]): UnivEq[OneAnd[F, A]] = derive
 
-  inline given scalazMonoidSet[A](using inline ev: UnivEq[A]): Monoid[Set[A]] =
+  inline implicit def scalazMonoidSet[A](using inline ev: UnivEq[A]): Monoid[Set[A]] =
     _scalazMonoidSet
 
   private[univeq] def _scalazMonoidSet[A]: Monoid[Set[A]] =

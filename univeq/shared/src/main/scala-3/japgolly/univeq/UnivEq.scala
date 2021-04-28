@@ -27,50 +27,50 @@ object UnivEq extends PlatformUnivEq, ScalaUnivEq:
   // TODO Rename all UnivEq.{[uU]nivEqXxx => xxx} givens
 
   // Primitives & core
-  inline given univEqNothing: UnivEq[Nothing] = force
-  inline given UnivEqBoolean: UnivEq[Boolean] = force
-  inline given UnivEqByte   : UnivEq[Byte   ] = force
-  inline given UnivEqChar   : UnivEq[Char   ] = force
-  inline given UnivEqDouble : UnivEq[Double ] = force
-  inline given UnivEqFloat  : UnivEq[Float  ] = force
-  inline given UnivEqInt    : UnivEq[Int    ] = force
-  inline given UnivEqLong   : UnivEq[Long   ] = force
-  inline given UnivEqShort  : UnivEq[Short  ] = force
-  inline given UnivEqUnit   : UnivEq[Unit   ] = force
-  inline given univEqString : UnivEq[String ] = force
+  inline implicit def univEqNothing: UnivEq[Nothing] = force
+  inline implicit def UnivEqBoolean: UnivEq[Boolean] = force
+  inline implicit def UnivEqByte   : UnivEq[Byte   ] = force
+  inline implicit def UnivEqChar   : UnivEq[Char   ] = force
+  inline implicit def UnivEqDouble : UnivEq[Double ] = force
+  inline implicit def UnivEqFloat  : UnivEq[Float  ] = force
+  inline implicit def UnivEqInt    : UnivEq[Int    ] = force
+  inline implicit def UnivEqLong   : UnivEq[Long   ] = force
+  inline implicit def UnivEqShort  : UnivEq[Short  ] = force
+  inline implicit def UnivEqUnit   : UnivEq[Unit   ] = force
+  inline implicit def univEqString : UnivEq[String ] = force
 
   // Tuples
-  inline given univEqEmptyTuple                               : UnivEq[EmptyTuple] = force
-  inline given univEqTuple     [H: UnivEq, T <: Tuple: UnivEq]: UnivEq[H *: T    ] = force
+  inline implicit def univEqEmptyTuple                               : UnivEq[EmptyTuple] = force
+  inline implicit def univEqTuple     [H: UnivEq, T <: Tuple: UnivEq]: UnivEq[H *: T    ] = force
 
   // Java
-  inline given univEqClass  [A]            : UnivEq[Class  [A]] = force
-  inline given univEqClass_                : UnivEq[Class  [_]] = force
-  inline given univEqJDouble               : UnivEq[jl.Double ] = force
-  inline given univEqJFloat                : UnivEq[jl.Float  ] = force
-  inline given univEqJInteger              : UnivEq[jl.Integer] = force
-  inline given univEqJLong                 : UnivEq[jl.Long   ] = force
-  inline given univEqJBoolean              : UnivEq[jl.Boolean] = force
-  inline given univEqJByte                 : UnivEq[jl.Byte   ] = force
-  inline given univEqJShort                : UnivEq[jl.Short  ] = force
-  inline given univEqJEnum[A <: jl.Enum[A]]: UnivEq[A         ] = force
-  inline given univEqUUID                  : UnivEq[ju.UUID   ] = force
+  inline implicit def univEqClass  [A]            : UnivEq[Class  [A]] = force
+  inline implicit def univEqClass_                : UnivEq[Class  [_]] = force
+  inline implicit def univEqJDouble               : UnivEq[jl.Double ] = force
+  inline implicit def univEqJFloat                : UnivEq[jl.Float  ] = force
+  inline implicit def univEqJInteger              : UnivEq[jl.Integer] = force
+  inline implicit def univEqJLong                 : UnivEq[jl.Long   ] = force
+  inline implicit def univEqJBoolean              : UnivEq[jl.Boolean] = force
+  inline implicit def univEqJByte                 : UnivEq[jl.Byte   ] = force
+  inline implicit def univEqJShort                : UnivEq[jl.Short  ] = force
+  inline implicit def univEqJEnum[A <: jl.Enum[A]]: UnivEq[A         ] = force
+  inline implicit def univEqUUID                  : UnivEq[ju.UUID   ] = force
 
   // java.time
-  inline given univEqJavaTimeDuration      : UnivEq[jt.Duration      ] = force
-  inline given univEqJavaTimeInstant       : UnivEq[jt.Instant       ] = force
-  inline given univEqJavaTimeLocalDate     : UnivEq[jt.LocalDate     ] = force
-  inline given univEqJavaTimeLocalDateTime : UnivEq[jt.LocalDateTime ] = force
-  inline given univEqJavaTimeLocalTime     : UnivEq[jt.LocalTime     ] = force
-  inline given univEqJavaTimeMonthDay      : UnivEq[jt.MonthDay      ] = force
-  inline given univEqJavaTimeOffsetDateTime: UnivEq[jt.OffsetDateTime] = force
-  inline given univEqJavaTimeOffsetTime    : UnivEq[jt.OffsetTime    ] = force
-  inline given univEqJavaTimePeriod        : UnivEq[jt.Period        ] = force
-  inline given univEqJavaTimeYear          : UnivEq[jt.Year          ] = force
-  inline given univEqJavaTimeYearMonth     : UnivEq[jt.YearMonth     ] = force
-  inline given univEqJavaTimeZonedDateTime : UnivEq[jt.ZonedDateTime ] = force
-  inline given univEqJavaTimeZoneId        : UnivEq[jt.ZoneId        ] = force
-  inline given univEqJavaTimeZoneOffset    : UnivEq[jt.ZoneOffset    ] = force
+  inline implicit def univEqJavaTimeDuration      : UnivEq[jt.Duration      ] = force
+  inline implicit def univEqJavaTimeInstant       : UnivEq[jt.Instant       ] = force
+  inline implicit def univEqJavaTimeLocalDate     : UnivEq[jt.LocalDate     ] = force
+  inline implicit def univEqJavaTimeLocalDateTime : UnivEq[jt.LocalDateTime ] = force
+  inline implicit def univEqJavaTimeLocalTime     : UnivEq[jt.LocalTime     ] = force
+  inline implicit def univEqJavaTimeMonthDay      : UnivEq[jt.MonthDay      ] = force
+  inline implicit def univEqJavaTimeOffsetDateTime: UnivEq[jt.OffsetDateTime] = force
+  inline implicit def univEqJavaTimeOffsetTime    : UnivEq[jt.OffsetTime    ] = force
+  inline implicit def univEqJavaTimePeriod        : UnivEq[jt.Period        ] = force
+  inline implicit def univEqJavaTimeYear          : UnivEq[jt.Year          ] = force
+  inline implicit def univEqJavaTimeYearMonth     : UnivEq[jt.YearMonth     ] = force
+  inline implicit def univEqJavaTimeZonedDateTime : UnivEq[jt.ZonedDateTime ] = force
+  inline implicit def univEqJavaTimeZoneId        : UnivEq[jt.ZoneId        ] = force
+  inline implicit def univEqJavaTimeZoneOffset    : UnivEq[jt.ZoneOffset    ] = force
 
   // ===================================================================================================================
   // Derivation
@@ -94,7 +94,7 @@ object UnivEq extends PlatformUnivEq, ScalaUnivEq:
     force
 
   object AutoDerive:
-    inline given autoDeriveUnivEq[A <: AnyRef]: UnivEq[A] =
+    inline implicit def autoDeriveUnivEq[A <: AnyRef]: UnivEq[A] =
       derived[A]
 
 end UnivEq
