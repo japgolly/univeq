@@ -13,7 +13,7 @@ object Dependencies {
     val Scala3          = "3.0.0"
     val ScalaCollCompat = "2.4.4"
     val ScalaJsDom      = "1.1.0"
-    val Scalaz          = "7.2.31"
+    val Scalaz          = "7.2.32"
 
     // Internal
     val MTest           = "0.7.10"
