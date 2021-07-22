@@ -1,3 +1,9 @@
+# 1.5.0
+
+* Drop Scalaz
+* Drop Scala 2.12
+* Upgrade Scala.JS to 1.6
+
 # 1.4.0
 
 * `UnivEq` is now a `final class` instead of a trait

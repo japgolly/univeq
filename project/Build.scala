@@ -43,8 +43,8 @@ object UnivEqBuild {
 
   val commonSettings = ConfigureBoth(
     _.settings(
-      scalaVersion                  := Ver.Scala3,
-      crossScalaVersions            := Seq(Ver.Scala212, Ver.Scala213, Ver.Scala3),
+      scalaVersion                  := Ver.scala2,
+      crossScalaVersions            := Seq(Ver.scala2, Ver.scala3),
       scalacOptions                ++= scalacCommonFlags,
       scalacOptions                ++= byScalaVersion {
                                          case (2, _) => scalac2Flags
@@ -61,12 +61,12 @@ object UnivEqBuild {
   def definesMacros: Project => Project =
     _.settings(
       scalacOptions       ++= (if (scalaVersion.value startsWith "3") Nil else Seq("-language:experimental.macros")),
-      libraryDependencies ++= (if (scalaVersion.value startsWith "3") Nil else Seq(Dep.ScalaCompiler.value % Provided)),
+      libraryDependencies ++= (if (scalaVersion.value startsWith "3") Nil else Seq(Dep.scalaCompiler.value % Provided)),
     )
 
   def utestSettings = ConfigureBoth(
     _.settings(
-      libraryDependencies += Dep.MTest.value % Test,
+      libraryDependencies += Dep.utest.value % Test,
       testFrameworks      += new TestFramework("utest.runner.Framework")))
     .jsConfigure(
       _.settings(Test / jsEnv := new JSDOMNodeJSEnv))
@@ -74,17 +74,12 @@ object UnivEqBuild {
   lazy val root =
     Project("root", file("."))
       .configure(commonSettings.jvm, preventPublication)
-      .aggregate(rootJVM, rootJS)
-
-  lazy val rootJVM =
-    Project("JVM", file(".rootJVM"))
-      .configure(commonSettings.jvm, preventPublication)
-      .aggregate(univEqJVM, scalazJVM, catsJVM)
-
-  lazy val rootJS =
-    Project("JS", file(".rootJS"))
-      .configure(commonSettings.jvm, preventPublication)
-      .aggregate(univEqJS , scalazJS , catsJS)
+      .aggregate(
+        univEqJVM,
+        univEqJS,
+        catsJVM,
+        catsJS,
+      )
 
   lazy val univEqJVM = univEq.jvm
   lazy val univEqJS  = univEq.js
@@ -94,7 +89,7 @@ object UnivEqBuild {
     .bothConfigure(definesMacros)
     .settings(
       moduleName := "univeq",
-      libraryDependencies += Dep.ScalaCollCompat.value)
+    )
     .jvmSettings(
       Test / fork        := true,
       Test / javaOptions += ("-Dclasses.dir=" + (Test / classDirectory).value.absolutePath),
@@ -108,18 +103,8 @@ object UnivEqBuild {
       }
     )
     .jsSettings(
-      libraryDependencies += Dep.ScalaJsDom.value)
-
-  lazy val scalazJVM = scalaz.jvm
-  lazy val scalazJS  = scalaz.js
-  lazy val scalaz = crossProject(JSPlatform, JVMPlatform)
-    .in(file("univeq-scalaz"))
-    .configureCross(commonSettings, crossProjectScalaDirs, publicationSettings)
-    .dependsOn(univEq)
-    .configureCross(utestSettings)
-    .settings(
-      moduleName          := "univeq-scalaz",
-      libraryDependencies += Dep.Scalaz.value)
+      libraryDependencies += Dep.scalaJsDom.value,
+    )
 
   lazy val catsJVM = cats.jvm
   lazy val catsJS  = cats.js
@@ -130,5 +115,6 @@ object UnivEqBuild {
     .configureCross(utestSettings)
     .settings(
       moduleName          := "univeq-cats",
-      libraryDependencies += Dep.Cats.value)
+      libraryDependencies += Dep.cats.value,
+    )
 }

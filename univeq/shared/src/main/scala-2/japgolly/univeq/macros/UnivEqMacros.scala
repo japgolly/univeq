@@ -1,7 +1,7 @@
 package japgolly.univeq.macros
 
-import scala.reflect.macros.blackbox.Context
 import japgolly.univeq.UnivEq
+import scala.reflect.macros.blackbox.Context
 
 final class UnivEqMacros(val c: Context) extends MacroUtils {
   import c.universe._

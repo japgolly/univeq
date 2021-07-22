@@ -1,8 +1,6 @@
 package japgolly.univeq
 
-import java.{lang => jl}
-import java.{time => jt}
-import java.{util => ju}
+import java.{lang => jl, time => jt, util => ju}
 
 /**
  * Universal equality.

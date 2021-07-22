@@ -1,9 +1,9 @@
 package japgolly.univeq
 
+import japgolly.univeq.UnivEq.force
+import scala.annotation.nowarn
 import scala.collection.{immutable => sci}
 import scala.concurrent.{duration => sd}
-import UnivEq.force
-import scala.annotation.nowarn
 
 @nowarn("cat=deprecation")
 trait ScalaUnivEq {

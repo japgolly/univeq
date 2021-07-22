@@ -1,7 +1,6 @@
 package japgolly.univeq.macros
 
 import scala.annotation.tailrec
-import scala.collection.compat._
 
 object MacroUtils {
   sealed trait FindSubClasses

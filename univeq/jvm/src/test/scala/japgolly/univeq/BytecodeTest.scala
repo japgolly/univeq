@@ -5,9 +5,10 @@ import scala.sys.process._
 import utest.{assert => _, _}
 
 /*
+sbt +clean
 sbt +test:compile
 
-for ver in 2.12 2.13 3; do
+for ver in 2.13 3; do
   rd=univeq/jvm/src/test/resources-$ver
   mkdir -p $rd
   cls='BytecodeTest$TestSubject.class'
@@ -43,6 +44,8 @@ object BytecodeTest extends TestSuite {
   private lazy val expectedDisassembly = {
     val filename = s"/$className.txt"
     val source = Source.fromInputStream(getClass.getResourceAsStream(filename))
+    if (null == source)
+      throw new RuntimeException(s"Resource not found: $filename")
     try source.mkString finally source.close()
   }
 

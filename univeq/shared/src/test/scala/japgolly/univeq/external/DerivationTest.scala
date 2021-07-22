@@ -1,9 +1,9 @@
 package japgolly.univeq.external
 // In external package so that univeq._ isn't imported
 
-import utest.{compileError => NO}
 import japgolly.univeq.UnivEq
-import UnivEq.{derive, deriveDebug}
+import japgolly.univeq.UnivEq.{derive, deriveDebug}
+import utest.{compileError => NO}
 
 object DerivationTest {
 

@@ -2,7 +2,7 @@ package japgolly.univeq
 
 import cats.data._
 import cats.kernel._
-import UnivEq._
+import japgolly.univeq.UnivEq._
 
 trait UnivEqCats {
 

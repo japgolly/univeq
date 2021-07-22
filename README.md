@@ -83,17 +83,9 @@ countUnique(good, good) // This is ok.
 ##### No dependencies:
 ```scala
 // Your SBT
-libraryDependencies += "com.github.japgolly.univeq" %%% "univeq" % "1.3.0"
+libraryDependencies += "com.github.japgolly.univeq" %%% "univeq" % "1.5.0"
 // Your code
 import japgolly.univeq._
-```
-
-##### Scalaz:
-```scala
-// Your SBT
-libraryDependencies += "com.github.japgolly.univeq" %%% "univeq-scalaz" % "1.3.0"
-// Your code
-import japgolly.univeq.UnivEqScalaz._
 ```
 
 ##### Cats:
