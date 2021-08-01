@@ -1,3 +1,7 @@
+# 1.6.0
+
+* Make `UnivEq` a non-final trait
+
 # 1.5.0
 
 * Drop Scalaz

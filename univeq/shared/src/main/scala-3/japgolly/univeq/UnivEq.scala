@@ -9,14 +9,14 @@ import java.{util => ju}
 /**
  * Universal equality.
  */
-final class UnivEq[A]:
-  inline def univEq(a: A, b: A): Boolean =
+trait UnivEq[A]:
+  inline final def univEq(a: A, b: A): Boolean =
     a.==*(b)(using this)
 
 object UnivEq extends PlatformUnivEq, ScalaUnivEq:
 
   private val singleton: UnivEq[Any] =
-    new UnivEq[Any]
+    new UnivEq[Any]{}
 
   def force[A]: UnivEq[A] =
     singleton.asInstanceOf[UnivEq[A]]
