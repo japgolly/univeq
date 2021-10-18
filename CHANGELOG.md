@@ -1,3 +1,7 @@
+# 2.0.0
+
+* Upgrade `scalajs-dom` to 2.0.0
+
 # 1.6.0
 
 * Make `UnivEq` a non-final trait
