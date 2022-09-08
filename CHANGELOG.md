@@ -1,3 +1,7 @@
+# 2.0.1
+
+* * Add `UnivEq[java.net.InetAddress]`
+
 # 2.0.0
 
 * Upgrade `scalajs-dom` to 2.0.0
@@ -127,4 +131,3 @@ Unbreak backwards-compatibility
 # 1.0
 
 Open-sourced.
-
