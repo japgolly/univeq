@@ -1,6 +1,7 @@
 package japgolly.univeq
 
 import java.{lang => jl}
+import java.{net => jn}
 import java.{time => jt}
 import java.{util => ju}
 
@@ -44,17 +45,18 @@ object UnivEq extends PlatformUnivEq, ScalaUnivEq:
   inline implicit def univEqTuple     [H: UnivEq, T <: Tuple: UnivEq]: UnivEq[H *: T    ] = force
 
   // Java
-  inline implicit def univEqClass  [A]            : UnivEq[Class  [A]] = force
-  inline implicit def univEqClass_                : UnivEq[Class  [_]] = force
-  inline implicit def univEqJDouble               : UnivEq[jl.Double ] = force
-  inline implicit def univEqJFloat                : UnivEq[jl.Float  ] = force
-  inline implicit def univEqJInteger              : UnivEq[jl.Integer] = force
-  inline implicit def univEqJLong                 : UnivEq[jl.Long   ] = force
-  inline implicit def univEqJBoolean              : UnivEq[jl.Boolean] = force
-  inline implicit def univEqJByte                 : UnivEq[jl.Byte   ] = force
-  inline implicit def univEqJShort                : UnivEq[jl.Short  ] = force
-  inline implicit def univEqJEnum[A <: jl.Enum[A]]: UnivEq[A         ] = force
-  inline implicit def univEqUUID                  : UnivEq[ju.UUID   ] = force
+  inline implicit def univEqClass[A]              : UnivEq[Class[A]      ] = force
+  inline implicit def univEqClass_                : UnivEq[Class[_]      ] = force
+  inline implicit def univEqJDouble               : UnivEq[jl.Double     ] = force
+  inline implicit def univEqJFloat                : UnivEq[jl.Float      ] = force
+  inline implicit def univEqJInteger              : UnivEq[jl.Integer    ] = force
+  inline implicit def univEqJLong                 : UnivEq[jl.Long       ] = force
+  inline implicit def univEqJBoolean              : UnivEq[jl.Boolean    ] = force
+  inline implicit def univEqJByte                 : UnivEq[jl.Byte       ] = force
+  inline implicit def univEqJShort                : UnivEq[jl.Short      ] = force
+  inline implicit def univEqJEnum[A <: jl.Enum[A]]: UnivEq[A             ] = force
+  inline implicit def univEqUUID                  : UnivEq[ju.UUID       ] = force
+  inline implicit def univEqInetAddress           : UnivEq[jn.InetAddress] = force
 
   // java.time
   inline implicit def univEqJavaTimeDuration      : UnivEq[jt.Duration      ] = force
