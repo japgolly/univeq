@@ -30,6 +30,8 @@ jobs:
         uses: japgolly/setup-everything-scala@v3.1
         with:
           java-version: adopt@1.${{ matrix.java }}
+          jsdom-version: 26.1.0
+          node-version: 24.10.0
 
       - name: Build and test
         shell: bash
