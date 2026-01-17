@@ -21,7 +21,7 @@ object Derivation:
     var failed = false
     var causes = List.empty[Type[?]]
 
-    def go[B: Type](fieldParent: Type[?] | Null): Unit =
+    def go[B: Type](fieldParent: Type[?] | Null, checkGivenExists: Boolean = true): Unit =
       val B = Type.of[B]
       log("  - Checking: " + Type.show[B])
 
@@ -30,7 +30,7 @@ object Derivation:
       seen.add(B)
 
       // Check 2: Does UnivEq[B] exist?
-      if Expr.summon[UnivEq[B]].isDefined then
+      if checkGivenExists && Expr.summon[UnivEq[B]].isDefined then
         log("      ok: found given")
         return
 
@@ -89,7 +89,7 @@ object Derivation:
 
     end go
 
-    go(Type.of[A])
+    go(Type.of[A], checkGivenExists = false)
     // log("Seen:")
     // log(seen.toList.map(t => Type.show(using t)).sorted.map("  - " + _).mkString("\n"))
 
