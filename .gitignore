@@ -25,4 +25,4 @@ project/metals.sbt
 .bsp
 .vscode/
 project/.sbtboot/
-
+.DS_Store
