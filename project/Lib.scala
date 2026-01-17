@@ -1,10 +1,8 @@
 import sbt._
 import Keys._
-import com.jsuereth.sbtpgp.PgpKeys._
 import sbtcrossproject.CrossProject
 import sbtcrossproject.CrossPlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
-import xerial.sbt.Sonatype.autoImport._
 
 object Lib {
   type CPE = CrossProject => CrossProject
@@ -55,19 +53,10 @@ object Lib {
 
   def publicationSettings(ghProject: String) = ConfigureBoth(
     _.settings(
-      publishTo := sonatypePublishToBundle.value,
-      pomExtra :=
-        <scm>
-          <connection>scm:git:github.com/japgolly/{ghProject}</connection>
-          <developerConnection>scm:git:git@github.com:japgolly/{ghProject}.git</developerConnection>
-          <url>github.com:japgolly/{ghProject}.git</url>
-        </scm>
-        <developers>
-          <developer>
-            <id>japgolly</id>
-            <name>David Barri</name>
-          </developer>
-        </developers>))
+      developers := List(
+        Developer("japgolly", "David Barri", "japgolly@gmail.com", url("https://japgolly.github.io/japgolly/")),
+      ),
+    ))
     .jsConfigure(
       sourceMapsToGithub(ghProject))
 
@@ -88,14 +77,5 @@ object Lib {
     )
 
   def preventPublication: PE =
-    _.settings(
-      publish / skip     := true,
-      publish            := {},
-      publishLocal       := {},
-      publishSigned      := {},
-      publishLocalSigned := {},
-      publishArtifact    := false,
-      publishTo          := Some(Resolver.file("Unused transient repository", target.value / "fakepublish")),
-      packagedArtifacts  := Map.empty)
-    // .disablePlugins(plugins.IvyPlugin)
+    _.settings(publish / skip := true)
 }

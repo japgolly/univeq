@@ -1,11 +1,9 @@
 import sbt._
 import sbt.Keys._
-import com.jsuereth.sbtpgp.PgpKeys
 import org.portablescala.sbtplatformdeps.PlatformDepsPlugin.autoImport._
 import org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv
 import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
 import sbtcrossproject.CrossPlugin.autoImport._
-import sbtrelease.ReleasePlugin.autoImport._
 import scalajscrossproject.ScalaJSCrossPlugin.autoImport._
 
 object UnivEqBuild {
@@ -54,9 +52,7 @@ object UnivEqBuild {
       testFrameworks                := Nil,
       incOptions                    := incOptions.value,
       updateOptions                 := updateOptions.value.withCachedResolution(true),
-      releasePublishArtifactsAction := PgpKeys.publishSigned.value,
-      releaseTagComment             := s"v${(ThisBuild / version).value}",
-      releaseVcsSign                := true))
+    ))
 
   def definesMacros: Project => Project =
     _.settings(

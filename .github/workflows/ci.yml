@@ -3,6 +3,10 @@ name: CI
 on:
   pull_request:
   push:
+    branches-ignore:
+      - gh-pages
+    tags-ignore:
+      - v*.*.*
 
 jobs:
   ci:
@@ -18,7 +22,9 @@ jobs:
     steps:
 
       - name: Git checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup Scala
         uses: japgolly/setup-everything-scala@v3.1
@@ -27,4 +33,9 @@ jobs:
 
       - name: Build and test
         shell: bash
-        run: sbt++field scala${{ matrix.scala }} clean test
+        run: >-
+          sbt++field scala${{ matrix.scala }}
+          -J-Xmx3G
+          -J-XX:+UseG1GC
+          -DCI=1
+          clean test
