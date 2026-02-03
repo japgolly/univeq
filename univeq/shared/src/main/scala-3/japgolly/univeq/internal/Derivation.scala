@@ -99,7 +99,7 @@ object Derivation:
         val causeList = causes.map(t => Type.show(using t)).sorted.map("  - " + _).mkString("\n")
         msg += "\n\nDerivation failed due to the lack of UnivEq instances for the following:\n" + causeList
       msg += "\n\n"
-      quotes.reflect.report.throwError(msg)
+      quotes.reflect.report.errorAndAbort(msg)
     else
       log(s"Successfully validated UnivEq[${Type.show[A]}]")
       '{ UnivEq.force[A] }

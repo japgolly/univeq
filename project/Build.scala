@@ -34,14 +34,11 @@ object UnivEqBuild {
   )
 
   def scalac3Flags = Seq(
-    "-new-syntax",
-    "-Yexplicit-nulls",
-    "-Yindent-colons",
   )
 
   val commonSettings = ConfigureBoth(
     _.settings(
-      scalaVersion                  := Ver.scala2,
+      scalaVersion                  := Ver.scala3,
       crossScalaVersions            := Seq(Ver.scala2, Ver.scala3),
       scalacOptions                ++= scalacCommonFlags,
       scalacOptions                ++= byScalaVersion {
