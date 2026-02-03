@@ -1,6 +1,17 @@
+# 2.1.0
+
+* Fix derivation in Scala 3: handle case classes extending `AnyVal`
+* Upgrade to Scala 2.13.10
+* Upgrade to Scala 3.3.7
+* Upgrade to Scala.js 1.12.0
+
+# 2.0.2
+
+* Fix derivation in Scala 3: Givens shouldn't simply check that they themselves exist
+
 # 2.0.1
 
-* * Add `UnivEq[java.net.InetAddress]`
+* Add `UnivEq[java.net.InetAddress]`
 
 # 2.0.0
 
