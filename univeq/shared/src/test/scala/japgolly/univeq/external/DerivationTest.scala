@@ -23,6 +23,10 @@ object DerivationTest {
   case class CC_IS(i: Int, s: String); derive[CC_IS]
   case class CC_SI(s: String, i: Int); derive[CC_SI]
 
+  // AnyVal classes
+  case class CCAV_I(i: Int) extends AnyVal; derive[CCAV_I]
+  case class CCAV_X(i: NopeI) extends AnyVal; NO("derive[CCAV_X]")
+
   // Custom instances
   case class CC_U (u: CC_I)        ; derive[CC_U ]
   case class CC_IU(i: Int, u: CC_I); derive[CC_IU]
