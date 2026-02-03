@@ -19,9 +19,13 @@ object DerivationTest {
   // Case classes, builtin instances
   case object CO                     ; derive[CO.type]
   case class CC0()                   ; derive[CC0]
-  case class CC_I (i: Int)           ; implicit def cc_i: UnivEq[CC_I] = derive
+  case class CC_I (i: Int)           ; derive[CC_I]
   case class CC_IS(i: Int, s: String); derive[CC_IS]
   case class CC_SI(s: String, i: Int); derive[CC_SI]
+
+  // AnyVal classes
+  case class CCAV_I(i: Int) extends AnyVal; derive[CCAV_I]
+  case class CCAV_X(i: NopeI) extends AnyVal; NO("derive[CCAV_X]")
 
   // Custom instances
   case class CC_U (u: CC_I)        ; derive[CC_U ]

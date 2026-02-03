@@ -26,10 +26,13 @@ object Derivation:
       log("  - Checking: " + Type.show[B])
 
       // Check 1: Already processed?
-      if seen.contains(B) then return
+      if seen.contains(B) then
+        log("   Already seen")
+        return
       seen.add(B)
 
       // Check 2: Does UnivEq[B] exist?
+      log("      summon UnivEq = " + Expr.summon[UnivEq[B]])
       if checkGivenExists && Expr.summon[UnivEq[B]].isDefined then
         log("      ok: found given")
         return
@@ -49,6 +52,7 @@ object Derivation:
           // log(s"  - Not a tuple: ${Type.show[B]}")
 
       // Check 4: Can we derive via a Mirror?
+      log("      Mirror = " + Expr.summon[Mirror.Of[B]])
       Expr.summon[Mirror.Of[B]] match
         case Some('{ $m: Mirror.ProductOf[B] { type MirroredElemTypes = types } }) =>
           log("    Product-type mirror found. Checking fields...")
@@ -61,9 +65,27 @@ object Derivation:
         case _ =>
           // log(s"    No mirror found for ${Type.show[B]}")
 
-      // Check 5: Is fixpoint of self?
+      // Check 5: Is AnyVal
       if fieldParent != null then
-        import quotes.reflect._
+        import quotes.reflect.*
+        val typeRepr = TypeRepr.of(using fieldParent).dealias
+        var success = false
+        for cls <- typeRepr.classSymbol do
+          val isAnyVal = typeRepr.baseClasses.exists(_.fullName == "scala.AnyVal")
+          if cls.flags.is(Flags.Case) && isAnyVal then
+            // We're dealing with a case class extending AnyVal
+            cls.caseFields.head.tree match
+              case ValDef(_, fieldType, _) =>
+                fieldType.tpe.asType match
+                  case '[t] =>
+                    go[t](null)
+                    success = true
+              case _ =>
+        if success then return
+
+      // Check 6: Is fixpoint of self?
+      if fieldParent != null then
+        import quotes.reflect.*
         val P = TypeRepr.of(using fieldParent).dealias
         val b = TypeRepr.of[B].dealias
         b match
