@@ -13,7 +13,7 @@ object Dependencies {
     val scalaJsDom = "2.0.0"
 
     // Internal
-    val utest      = "0.7.10"
+    val utest      = "0.7.11"
   }
 
   object Dep {
